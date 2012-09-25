@@ -1,0 +1,13 @@
+# Shortcut to this dotfiles path is $ZSH
+export ZSH=$HOME/Dropbox/.dotfiles
+
+# Initialize autocomplete here, otherwise functions won't be loaded
+autoload -Uz compinit && compinit
+
+# Source every .zsh file in this repo
+for config_file ($ZSH/**/*.zsh) source $config_file 
+
+# Anything in .localrc won't get pushed to Github
+if [[ -a ~/.localrc ]]; then
+  source ~/.localrc
+fi
