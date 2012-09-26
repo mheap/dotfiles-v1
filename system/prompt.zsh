@@ -24,7 +24,11 @@ function get_git_dirty {
 
 
 function precmd() {
-	PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
+
+	NAME=""
+	if [[ $(whoami) != "michael" ]]; then; NAME="%n%{$reset_color%}@"; fi;
+
+	PROMPT="%{$fg[red]%}$NAME%{$fg_bold[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
 $(prompt_char) "
 	RPROMPT="$(git_branch)%{$reset_color%}%"
 
