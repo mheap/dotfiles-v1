@@ -8,3 +8,8 @@ then
   alias ll="gls -l --color"
   alias la='gls -A --color'
 fi
+
+title () {
+    # echo works in bash & zsh
+    echo -ne "\033]0;$@\007"
+}
