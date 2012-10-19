@@ -9,7 +9,10 @@ then
   alias la='gls -A --color'
 fi
 
+# Set the current tab's title
 title () {
-    # echo works in bash & zsh
     echo -ne "\033]0;$@\007"
 }
+
+# Alias cat to use pygments
+alias cat='pygmentize -O style=monokai -f console256 -g'
