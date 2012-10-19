@@ -15,4 +15,4 @@ title () {
 }
 
 # Alias cat to use pygments
-alias cat='pygmentize -O style=monokai -f console256 -g'
+alias c='pygmentize -O style=monokai -f console256 -g'

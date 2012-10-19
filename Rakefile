@@ -1,6 +1,19 @@
 require 'rake'
 
 desc "Hook our dotfiles into system-standard positions."
+
+task :bootstrap do
+
+  bootstraps = Dir.glob('*/**{.sh}', File::FNM_DOTMATCH)
+  bootstraps.each do |bootstrap|
+    # Only run osx files under OSX
+    next if `uname`.chomp != 'Darwin' and bootstrap.include? 'osx'
+
+    # Run the script
+    system( "bash #{bootstrap}" )
+  end
+end
+
 task :install do
   linkables = Dir.glob('*/**{.symlink}', File::FNM_DOTMATCH)
   skip_all = false
