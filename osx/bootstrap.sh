@@ -8,6 +8,9 @@ fi
 # Install git
 brew install git
 
+# Install wget
+brew install wget
+
 # Add additional homebrew taps
 brew tap homebrew/dupes
 brew tap josegonzalez/homebrew-php

@@ -97,9 +97,6 @@ defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
 defaults write com.apple.finder DisableAllAnimations -bool true
 
 
-# Finder: show hidden files by default
-defaults write com.apple.Finder AppleShowAllFiles -bool true
-
 # Finder: show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
