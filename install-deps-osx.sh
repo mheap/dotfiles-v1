@@ -19,6 +19,9 @@ brew install git
 brew tap homebrew/dupes
 brew tap josegonzalez/homebrew-php
 
+# Coreutils!
+brew install coreutils
+
 # And install PHP 5.4
 brew install josegonzalez/php/php54
 export PATH="$(brew --prefix josegonzalez/php/php54)/bin:$PATH"
