@@ -26,7 +26,7 @@ function precmd() {
 	NAME=""
 	if [[ $(whoami) != "michael" ]]; then; NAME="%n%{$reset_color%}@"; fi;
 
-	PROMPT="%{$fg[red]%}$NAME%{$fg_bold[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
+	PROMPT="%{$fg[red]%}$NAME%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
 $(prompt_char) "
 	RPROMPT="$(git_branch)%{$reset_color%}%"
 
