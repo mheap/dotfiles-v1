@@ -1,8 +1,34 @@
+" Set up Vundle
+set nocompatible               " be iMproved
+filetype off                   " required!
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+
+Bundle 'altercation/vim-colors-solarized'
+
+filetype plugin indent on
+
+" Reload this file every time I save it
+autocmd BufWritePre .gvimrc,.vimrc source <amatch>
+
+
+"""""""""""""""""""""""""""""""
+"" My actual config
+"""""""""""""""""""""""""""""""
+
 " Change leader key to something less stupid
 let mapleader=","
 
 " Map ; to :
 nnoremap ; :
+
+" Remap jj to <Esc>
+:imap jj <Esc>
 
 " Disable arrow keys 
 map <up> <nop>
@@ -13,3 +39,11 @@ imap <up> <nop>
 imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
+
+" Solarized colours
+syntax enable
+set background=dark
+colorscheme solarized
+
+" Big font size
+set guifont=Bitstream\ Vera\ Sans\ Mono:h18
