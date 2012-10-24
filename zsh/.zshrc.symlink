@@ -5,7 +5,9 @@ export ZSH=$HOME/Dropbox/.dotfiles
 autoload -Uz compinit && compinit
 
 # Source every .zsh file in this repo
-for config_file ($ZSH/**/*.zsh) source $config_file 
+for config_file ($ZSH/**/*.zsh); do
+	[ -z "`echo $config_file | grep zsh-syntax-highlighting`" ] && source $config_file 
+done
 
 # Anything in .localrc won't get pushed to Github
 if [[ -a ~/.localrc ]]; then
