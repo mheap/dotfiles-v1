@@ -2,17 +2,10 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
 
-Bundle 'gmarik/vundle'
-Bundle 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'myusuf3/numbers.vim'
-Bundle 'scrooloose/nerdtree'
+call pathogen#infect()
 
-Bundle 'altercation/vim-colors-solarized'
-
+" Set smart indenting
 filetype plugin indent on
 
 " Reload this file every time I save it
