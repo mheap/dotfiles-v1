@@ -8,22 +8,45 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'myusuf3/numbers.vim'
+Bundle 'scrooloose/nerdtree'
 
 Bundle 'altercation/vim-colors-solarized'
 
 filetype plugin indent on
 
 " Reload this file every time I save it
-autocmd BufWritePre .gvimrc,.vimrc source <amatch>
+augroup myvimrchooks
+    au!
+    autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END
 
-
-"""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""
 "" My actual config
-"""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""
 
 " Change leader key to something less stupid
 let mapleader=","
 
+
+
+""""""""""""""""""""""""""""""
+"" How it looks
+""""""""""""""""""""""""""""""
+
+" Big font size
+set guifont=Bitstream\ Vera\ Sans\ Mono:h18
+
+" Solarized colours
+syntax enable
+set background=dark
+colorscheme solarized
+
+
+
+""""""""""""""""""""""""""""""
+"" Mappings
+""""""""""""""""""""""""""""""
 " Map ; to :
 nnoremap ; :
 
@@ -40,10 +63,54 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
-" Solarized colours
-syntax enable
-set background=dark
-colorscheme solarized
+" Easy window navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
-" Big font size
-set guifont=Bitstream\ Vera\ Sans\ Mono:h18
+
+
+"""""""""""""""""""""""""
+"" Set various options
+"""""""""""""""""""""""""
+
+" hidden - http://usevim.com/2012/10/19/vim101-set-hidden/
+set hidden
+
+" Tabs = 4 spaces
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" Case insensitive searching, unless it contains a capital
+set ignorecase smartcase
+
+" Show current line
+set cursorline
+
+" Enable file completing a la ZSH when using tab to complete file names
+" aka: Complete to the longest common substring then cycle through
+set wildmode=longest,full
+" Ignore some file types when completing
+set wildignore+=.git,*.swp
+
+
+" Enable find-as-you-type searching
+set incsearch
+" Highlight all matches
+set hlsearch
+
+
+" Keep the current line centered constantly
+set scrolloff=999
+
+
+
+
+""""""""""""""""""""""""""""""
+"" Plugin mappings
+""""""""""""""""""""""""""""""
+" Map NERDTree to ,d
+nnoremap <leader>d :NERDTreeToggle<cr>
+
