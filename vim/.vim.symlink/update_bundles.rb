@@ -6,6 +6,8 @@ git_bundles = %w{
     git://github.com/Lokaltog/vim-easymotion.git
     git://github.com/myusuf3/numbers.vim.git
     git://github.com/scrooloose/nerdtree.git
+    git://github.com/vim-scripts/LustyJuggler.git
+    git://github.com/kien/ctrlp.vim.git
 }
 
 require 'fileutils'

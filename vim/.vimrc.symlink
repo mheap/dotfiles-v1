@@ -86,7 +86,7 @@ set cursorline
 " aka: Complete to the longest common substring then cycle through
 set wildmode=longest,full
 " Ignore some file types when completing
-set wildignore+=.git,*.swp
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 
 
 " Enable find-as-you-type searching
@@ -100,6 +100,15 @@ set scrolloff=999
 
 
 
+""""""""""""""""""""""""""""""
+"" Plugin settings
+""""""""""""""""""""""""""""""
+" Ignore vendor (composer), node_modules (npm) and any VCS folders.
+" Don't forget to run :ClearAllCtrlPCaches when changing this
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](vendor|node_modules|\.(git|hg|svn))$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ }
 
 """"""""""""""""""""""""""""""
 "" Plugin mappings
