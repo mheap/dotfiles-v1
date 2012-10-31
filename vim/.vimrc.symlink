@@ -113,6 +113,10 @@ let g:ctrlp_custom_ignore = {
 """"""""""""""""""""""""""""""
 "" Plugin mappings
 """"""""""""""""""""""""""""""
+
 " Map NERDTree to ,d
 nnoremap <leader>d :NERDTreeToggle<cr>
+
+" Map LustyJuggler to ,b
+nnoremap <leader>b :LustyJuggler<cr>
 
