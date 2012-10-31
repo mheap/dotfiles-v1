@@ -162,7 +162,7 @@ hash tmutil &> /dev/null && sudo tmutil disablelocal
 defaults write com.google.Chrome ExtensionInstallSources -array "https://*.github.com/*"
 
 # Show hidden files by default
-defaults write com.apple.Finder AppleShowAllFiles -bool true
+defaults write com.apple.Finder AppleShowAllFiles -bool false
 
 
 # Kill affected applications
