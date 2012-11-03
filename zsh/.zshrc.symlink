@@ -1,6 +1,15 @@
 # Shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/Dropbox/.dotfiles
 
+# Some config stuff
+IS_OSX= [ "`uname`" = "Darwin" ];
+BREW_INSTALLED= [ "`which brew`" != "brew not found" ];
+
+
+#####################################
+## Carry on
+#####################################
+
 # Initialize autocomplete here, otherwise functions won't be loaded
 autoload -Uz compinit && compinit
 
