@@ -2,9 +2,15 @@
 export ZSH=$HOME/Dropbox/.dotfiles
 
 # Some config stuff
-IS_OSX= [ "`uname`" = "Darwin" ];
-BREW_INSTALLED= [ "`which brew`" != "brew not found" ];
+IS_OSX=0
+if [ "`uname`" = "Darwin" ]; then
+    IS_OSX=1
+fi
 
+BREW_INSTALLED=0
+if [ "`which brew`" != "brew not found" ]; then
+    BREW_INSTALLED=1
+fi
 
 #####################################
 ## Carry on

@@ -12,6 +12,8 @@ git_bundles = [
     "git://github.com/scrooloose/nerdtree.git", # Tree file viewer
     "git://github.com/vim-scripts/LustyJuggler.git", # Buffer manager
     "git://github.com/kien/ctrlp.vim.git", # Fuzzy matching file opener
+    "git://github.com/vim-scripts/taglist.vim.git", # Taglist (needs ctags)
+    "git://github.com/vim-scripts/AutoTag.git", # Renegerage ctags when file is saved
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
