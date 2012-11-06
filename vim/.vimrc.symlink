@@ -98,7 +98,8 @@ set hlsearch
 " Keep the current line centered constantly
 set scrolloff=999
 
-
+" Remove intro message
+set shortmess=atI
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
