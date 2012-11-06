@@ -31,3 +31,8 @@
         prompt = false
 [help]
         autocorrect = 1
+
+# Any GitHub repo with my username should be checked out r/w by default
+# http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
+[url "git@github.com:mheap/"]
+  insteadOf = "git://github.com/mheap/"
