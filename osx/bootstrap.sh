@@ -11,6 +11,18 @@ brew install git
 # Install wget
 brew install wget
 
+# And ack
+brew install ack
+
+# And autoconf (for phpize)
+brew install autoconf
+
+# How about mysql?
+brew install mysql
+
+# We need ctags for vim
+brew install ctags
+
 # Add additional homebrew taps
 brew tap homebrew/dupes
 brew tap josegonzalez/homebrew-php
