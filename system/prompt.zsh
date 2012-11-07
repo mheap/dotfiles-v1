@@ -7,28 +7,28 @@ function prompt_char {
 }
 
 function git_branch {
-	BRANCH="$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)"
-	if ! test -z $BRANCH; then
-		COL="%{$fg[green]%}" # Everything's fine
-		[[ $(git log origin/master..HEAD 2> /dev/null ) != "" ]] && COL="%{$fg[blue]%}" # We have changes to push
-		[[ $(git status --porcelain 2> /dev/null) != "" ]] && COL="%{$fg[red]%}" # We have uncommited changes
-		echo "$COL$BRANCH"
-	fi
+    BRANCH="$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)"
+    if ! test -z $BRANCH; then
+        COL="%{$fg[green]%}" # Everything's fine
+        [[ $(git log origin/master..HEAD 2> /dev/null ) != "" ]] && COL="%{$fg[blue]%}" # We have changes to push
+        [[ $(git status --porcelain 2> /dev/null) != "" ]] && COL="%{$fg[red]%}" # We have uncommited changes
+        echo "$COL$BRANCH"
+    fi
 }
 
-function get_git_dirty { 
-   [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]] && echo "%{$fg[blue]%}"
+function battery_stats {
+    BATT_PERCENT="`pmset -g batt | grep Internal | awk '{print $2}' | sed 's/;//'`%"
+    [ $BATT_PERCENT = "100%%" ] && BATT_PERCENT=""
+    echo $BATT_PERCENT
 }
-
 
 function precmd() {
+    NAME=""
+    if [[ $(whoami) != "michael" ]]; then; NAME="%n%{$reset_color%}@"; fi;
 
-	NAME=""
-	if [[ $(whoami) != "michael" ]]; then; NAME="%n%{$reset_color%}@"; fi;
-
-	PROMPT="%{$fg[red]%}$NAME%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
+    PROMPT="%{$fg[red]%}$NAME%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
 $(prompt_char) "
-	RPROMPT="$(git_branch)%{$reset_color%}%"
+    RPROMPT="$(git_branch)%{$reset_color%}%  $(battery_stats)"
 
-	title $(pwd | sed -e "s,^$HOME,~,")
+    title $(pwd | sed -e "s,^$HOME,~,")
 }
