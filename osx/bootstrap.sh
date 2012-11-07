@@ -11,6 +11,10 @@ brew install git
 # Install wget
 brew install wget
 
+# Add additional homebrew taps
+brew tap homebrew/dupes
+brew tap josegonzalez/homebrew-php
+
 # And ack
 brew install ack
 
@@ -23,12 +27,12 @@ brew install mysql
 # We need ctags for vim
 brew install ctags
 
-# Add additional homebrew taps
-brew tap homebrew/dupes
-brew tap josegonzalez/homebrew-php
-
 # Coreutils!
 brew install coreutils
+
+# Youtube-dl stuff, needed for to-mp3
+brew install youtube-dl
+brew install ffmpeg
 
 # And install PHP 5.4
 brew install josegonzalez/php/php54
