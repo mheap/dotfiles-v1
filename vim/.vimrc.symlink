@@ -62,7 +62,30 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+"""""""""""""""""""""""""
+"" Helpful functions
+"""""""""""""""""""""""""
 
+" Set working dir to git root
+function! SetGitDir()
+    " Change working dir to the current file
+    cd %:p:h
+    " Set 'gitdir' to be the folder containing .git
+    let gitdir=system("git rev-parse --show-toplevel")
+    " See if the command output starts with 'fatal' (if it does, not in a git repo)
+    let isnotgitdir=matchstr(gitdir, '^fatal:.*')
+    " If it empty, there was no error. Let's cd
+    if empty(isnotgitdir)
+        cd `=gitdir`
+    endif
+endfunction
+
+" Get the current working dir, nicely formatted
+function! CWD()
+    let curdir = substitute(getcwd(), '/Users/michael', "~", "g")
+    let curdir = substitute(curdir, '/home/michael', "~", "g")
+    return curdir
+endfunction
 
 """""""""""""""""""""""""
 "" Set various options
@@ -75,6 +98,7 @@ set hidden
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set softtabstop=4
 
 " Case insensitive searching, unless it contains a capital
 set ignorecase smartcase
@@ -93,13 +117,41 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 set incsearch
 " Highlight all matches
 set hlsearch
-
+" Disable search highlight on <leader><space>
+nnoremap <leader><space> :nohlsearch<cr>
 
 " Keep the current line centered constantly
 set scrolloff=999
 
 " Remove intro message
 set shortmess=atI
+
+" Always show a ruler
+set ruler
+
+" Copy/Paste to and from Desktop Environment
+noremap <leader>yy "+y
+noremap <leader>pp "+gP
+
+" Set working directory (usually for ctags)
+nnoremap <leader>. :call SetGitDir()<CR>
+
+" Time to set up a command line that's useful
+" Set it's height to 2
+set cmdheight=2
+" Always show
+set laststatus=2
+" Show the current line+column, then current working dir, then current file.
+" Then show if it's read only, then if it's a help pane, then if it's a
+" preview window. Next, show git status with fugitive, then any syntax errors
+" with Syntastic
+set statusline=[%l,%v][CWD:\ %{CWD()}][FILE:\ %f]\ %r%h%w\ %{fugitive#statusline()}\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
+" Show command info, e.g. {lines}x{columns} when in visual
+set showcmd
+" Show what mode we're in too
+set showmode
+
+autocmd BufEnter * :call SetGitDir()
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
@@ -121,3 +173,5 @@ nnoremap <leader>d :NERDTreeToggle<cr>
 " Map LustyJuggler to ,b
 nnoremap <leader>b :LustyJuggler<cr>
 
+" Map tagbar to ,l
+nnoremap <leader>l :TagbarToggle<CR>

@@ -12,14 +12,19 @@ git_bundles = [
     "git://github.com/scrooloose/nerdtree.git", # Tree file viewer
     "git://github.com/vim-scripts/LustyJuggler.git", # Buffer manager
     "git://github.com/kien/ctrlp.vim.git", # Fuzzy matching file opener
-    "git://github.com/vim-scripts/taglist.vim.git", # Taglist (needs ctags)
+    "git://github.com/majutsushi/tagbar.git", # Tagbar (newer taglist) (needs ctags)
     "git://github.com/vim-scripts/AutoTag.git", # Renegerate ctags when file is saved
     "git://github.com/Raimondi/delimitMate.git", # Smart quote/parethesis closing
     "git://github.com/docunext/closetag.vim.git", # Auto close HTML tags
+    "git://github.com/ervandew/supertab.git", # Insert mode tab completion
+    "git://github.com/tpope/vim-surround.git", # Easily change surrounding text
+    "git://github.com/scrooloose/syntastic.git", # Inline syntax checking
+    "git://github.com/tpope/vim-fugitive.git", # Git support so good it should be illegal
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
     "git://github.com/pangloss/vim-javascript.git", # Better Javascript indentation
+    "git://github.com/vim-scripts/Better-CSS-Syntax-for-Vim.git", # Better CSS3 highlighting
     "git://github.com/skammer/vim-css-color.git" # Show CSS colours in vim
 ]
 
