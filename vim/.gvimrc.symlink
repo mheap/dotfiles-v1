@@ -1,3 +1,9 @@
 set guioptions-=L
 set guioptions-=r
 set guioptions-=T
+
+" resize current buffer by +/- 5 
+nnoremap <C-Left> :vertical resize -5<cr>
+nnoremap <C-Down> :resize +5<cr>
+nnoremap <C-Up> :resize -5<cr>
+nnoremap <C-Right> :vertical resize +5<cr>

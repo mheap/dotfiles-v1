@@ -22,3 +22,18 @@ title () {
 
 # Alias cat to use pygments
 alias c='pygmentize -O style=monokai -f console256 -g'
+
+# Global ps, awesome
+alias gps="ps -c -r -ax -o command,pid,pcpu,time | sed 's/\(PID *\)%/\1 %/' | head -n 11 && echo && ps -c -m -ax -o command,pid,pmem,rss=RSIZE | sed 's/\(.\{23\}\)/\1 /' | head -n 9"
+
+# Smart cd function, allows switching to /etc when running 'cd /etc/fstab'
+function cd() {
+    if (( ${#argv} == 1 )) && [[ -f ${1} ]]; then
+        [[ ! -e ${1:h} ]] && return 1
+        print "Correcting ${1} to ${1:h}"
+        builtin cd ${1:h}
+    else
+        builtin cd "$@"
+    fi
+}
+

@@ -110,8 +110,17 @@ set cursorline
 " aka: Complete to the longest common substring then cycle through
 set wildmode=longest,full
 " Ignore some file types when completing
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-
+set wildignore+=.hg,.git,.svn                    " Version control
+set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg   " binary images
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest " compiled object files
+set wildignore+=*.spl                            " compiled spelling word lists
+set wildignore+=*.sw?                            " Vim swap files
+set wildignore+=*.DS_Store                       " OSX bullshit
+set wildignore+=*.luac                           " Lua byte code
+set wildignore+=*.pyc                            " Python byte code
+set wildignore+=*.orig                           " Merge resolution files
+set wildignore+=*.zip,*.rar                      " Ignore archive files
 
 " Enable find-as-you-type searching
 set incsearch
@@ -122,6 +131,8 @@ nnoremap <leader><space> :nohlsearch<cr>
 
 " Keep the current line centered constantly
 set scrolloff=999
+" Toggle 'keep current line in the center of the screen' mode
+nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
 
 " Remove intro message
 set shortmess=atI
@@ -151,7 +162,42 @@ set showcmd
 " Show what mode we're in too
 set showmode
 
+" When opening a file, change the current working dir to git root
 autocmd BufEnter * :call SetGitDir()
+
+" Show trailing whitespace
+set list listchars=tab:»·,trail:·
+
+" In visual block mode, make tab/shift-tab indent/outdent
+vmap <Tab> >
+vmap <S-Tab> <
+
+" Make commands time out after 300ms so I can type jj
+set timeoutlen=300
+
+" Jump to first char with 0, and beginning of line with ^
+nnoremap 0 ^
+nnoremap ^ 0
+
+" gj/gk treat wrapped lines as separate
+" (i.e. you can move up/down in one wrapped line)
+" I like that behavior better, so I inverted the keys.
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+" Make Y behave like D and C, go from cursor to end
+nnoremap Y y$
+
+" Switch tabs with ctrl-tab and ctrl-shift-tab like most browsers
+map <C-Tab> gt
+map <C-S-Tab> gT
+
+" Nicer split resizing with alt+left/right
+map <silent><m-Left> :vertical resize -5<cr>
+map <silent><m-Right> :vertical resize +5<cr>
+
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
@@ -175,3 +221,14 @@ nnoremap <leader>b :LustyJuggler<cr>
 
 " Map tagbar to ,l
 nnoremap <leader>l :TagbarToggle<CR>
+
+" Fugitive mappings
+nnoremap <leader>gd :Gdiff<cr>
+nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gw :Gwrite<cr>
+nnoremap <leader>ga :Gadd<cr>
+nnoremap <leader>gb :Gblame<cr>
+nnoremap <leader>gco :Gcheckout<cr>
+nnoremap <leader>gci :Gcommit<cr>
+nnoremap <leader>gm :Gmove<cr>
+nnoremap <leader>gr :Gremove<cr>

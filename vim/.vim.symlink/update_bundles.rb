@@ -20,6 +20,7 @@ git_bundles = [
     "git://github.com/tpope/vim-surround.git", # Easily change surrounding text
     "git://github.com/scrooloose/syntastic.git", # Inline syntax checking
     "git://github.com/tpope/vim-fugitive.git", # Git support so good it should be illegal
+    "git://github.com/tristen/vim-sparkup.git", # Zen-coding-esque expansion
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
