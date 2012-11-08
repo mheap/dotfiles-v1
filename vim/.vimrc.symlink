@@ -198,6 +198,24 @@ map <C-S-Tab> gT
 map <silent><m-Left> :vertical resize -5<cr>
 map <silent><m-Right> :vertical resize +5<cr>
 
+" Don't deselect when using tab/shift-tab in visual mode
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
+
+" Some general formatting options
+set formatoptions=
+set formatoptions+=c " Format comments
+set formatoptions+=r " Continue comments by default
+set formatoptions+=o " Make comment when using o or O from comment line
+set formatoptions+=q " Format comments with gq
+set formatoptions+=n " Recognize numbered lists
+set formatoptions+=2 " Use indent from 2nd line of a paragraph
+set formatoptions+=l " Don't break lines that are already long
+set formatoptions+=1 " Break before 1-letter words
+
+" New splits go below and to the right
+set splitbelow
+set splitright
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
