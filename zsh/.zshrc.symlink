@@ -18,10 +18,26 @@ fi
 
 # Initialize autocomplete here, otherwise functions won't be loaded
 autoload -Uz compinit && compinit
+setopt completeinword
+# Case insensitive
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Better killall completion
+zstyle ':completion:*:killall:*' command 'ps -u $USER -o cmd'
+
+# Enable the history file
+HISTFILE=~/.zhistory
+HISTSIZE=SAVEHIST=10000
+setopt incappendhistory
+setopt sharehistory
+setopt extendedhistory
+
+# Just type a dir name to cd to it
+setopt auto_cd
 
 # Source every .zsh file in this repo
 for config_file ($ZSH/**/*.zsh); do
-	[ -z "`echo $config_file | grep zsh-syntax-highlighting`" ] && source $config_file 
+    [ -z "`echo $config_file | grep zsh-syntax-highlighting`" ] && source $config_file 
 done
 
 # Anything in .localrc won't get pushed to Github

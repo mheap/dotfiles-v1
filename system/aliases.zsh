@@ -37,3 +37,5 @@ function cd() {
     fi
 }
 
+# Smart defaults
+alias mkdir='mkdir -p'
