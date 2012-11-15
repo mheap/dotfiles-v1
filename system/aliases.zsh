@@ -39,3 +39,4 @@ function cd() {
 
 # Smart defaults
 alias mkdir='mkdir -p'
+alias serve='python -m SimpleHTTPServer'

@@ -17,6 +17,7 @@ function git_branch {
 }
 
 function battery_stats {
+    [[ $IS_OSX -eq 0 ]] && return # If we're not on OSX
     BATT_PERCENT="`pmset -g batt | grep Internal | awk '{print $2}' | sed 's/;//'`%"
     [ $BATT_PERCENT = "100%%" ] && BATT_PERCENT=""
     echo $BATT_PERCENT
