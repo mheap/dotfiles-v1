@@ -28,7 +28,11 @@ let mapleader=","
 """"""""""""""""""""""""""""""
 
 " Big font size
-set guifont=Bitstream\ Vera\ Sans\ Mono:h18
+if has("gui_macvim")
+    set guifont=Bitstream\ Vera\ Sans\ Mono:h18
+else
+    set guifont=Bitstream\ Vera\ Sans\ Mono\ 14
+endif
 
 " Solarized colours
 syntax enable
@@ -55,6 +59,11 @@ imap <up> <nop>
 imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
+
+" Left/Right changes buffer
+nnoremap <left> :bp<CR>
+nnoremap <right> :bn<CR>
+
 
 " Easy window navigation
 map <C-h> <C-w>h
@@ -131,6 +140,10 @@ nnoremap <leader><space> :nohlsearch<cr>
 
 " Keep the current line centered constantly
 set scrolloff=999
+" Keep 15 chars to the right/left visible + scroll 1 char at a time
+set sidescrolloff=15
+set sidescroll=1
+
 " Toggle 'keep current line in the center of the screen' mode
 nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
 
@@ -194,13 +207,16 @@ nnoremap Y y$
 map <C-Tab> gt
 map <C-S-Tab> gT
 
-" Nicer split resizing with alt+left/right
-map <silent><m-Left> :vertical resize -5<cr>
-map <silent><m-Right> :vertical resize +5<cr>
+" Nicer split resizing with ctrl+left/right
+map <silent><C-Left> :vertical resize -5<cr>
+map <silent><C-Right> :vertical resize +5<cr>
 
 " Don't deselect when using tab/shift-tab in visual mode
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
+" Allow tab in normal mode
+nnoremap <tab> >>
+nnoremap <s-tab> <<
 
 " Some general formatting options
 set formatoptions=
@@ -216,6 +232,49 @@ set formatoptions+=1 " Break before 1-letter words
 " New splits go below and to the right
 set splitbelow
 set splitright
+
+" Force saving files that need root
+cmap w!! %!sudo tee > /dev/null %
+
+" Highlight column 80
+if exists('+colorcolumn')
+  set colorcolumn=80
+else
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+
+" In xterm, set the tab's title to the current file
+set title
+
+" Jump to tag with ,F
+nnoremap <silent> <leader>F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
+
+" This is a cheat, but it's useful. Enable <cr> in normal mode
+nnoremap <silent> <CR> :put=''<CR>
+
+" Unify cut+paste with system (OSX Only)
+if version >= 730 && has("macunix")
+  " Default yank and paste go to Mac's clipboard
+  set clipboard=unnamed
+end
+
+" Use <space> to toggle folds
+nnoremap <Space> za
+vnoremap <Space> za
+
+" Make U do the opposite of u (aka redo)
+nnoremap U <C-r>
+
+" Underline all the things!
+noremap <leader>- YpVr-
+noremap <leader>= YpVr=
+
+" Tell netrw to keep its history file in ~/.vim/tmp
+let g:netrw_home = '~/.vim/tmp'
+
+" Keep temporary files out of working directories. Trailing double-slash tells
+" vim to base the filename on the full path of the original to avoid conflicts.
+set directory=~/.vim/tmp/swap//
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
@@ -233,6 +292,8 @@ let g:ctrlp_custom_ignore = {
 
 " Map NERDTree to ,d
 nnoremap <leader>d :NERDTreeToggle<cr>
+" NERDTree with current file with ,s
+nnoremap <leader>s :NERDTreeFind<cr>
 
 " Map LustyJuggler to ,b
 nnoremap <leader>b :LustyJuggler<cr>

@@ -49,3 +49,6 @@ fi
 PATH=$ZSH/bin:$PATH
 
 PATH=/usr/local/share/python:$PATH
+
+
+# alias php='~/local/php/5.4.2/bin/php'

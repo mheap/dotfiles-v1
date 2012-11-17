@@ -7,7 +7,7 @@ function prompt_char {
 }
 
 function git_branch {
-    BRANCH="$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3)"
+    BRANCH="$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3,4,5)"
     if ! test -z $BRANCH; then
         COL="%{$fg[green]%}" # Everything's fine
         [[ $(git log origin/master..HEAD 2> /dev/null ) != "" ]] && COL="%{$fg[blue]%}" # We have changes to push
