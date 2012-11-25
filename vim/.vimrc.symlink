@@ -71,6 +71,9 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" Reindent!
+map <F7> mzgg=G`z
+
 """""""""""""""""""""""""
 "" Helpful functions
 """""""""""""""""""""""""
@@ -104,10 +107,8 @@ endfunction
 set hidden
 
 " Tabs = 4 spaces
-set tabstop=4
-set shiftwidth=4
-set expandtab
-set softtabstop=4
+"set tabstop=4 shiftwidth=4 expandtab softtabstop=4
+set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
 " Case insensitive searching, unless it contains a capital
 set ignorecase smartcase
@@ -137,6 +138,8 @@ set incsearch
 set hlsearch
 " Disable search highlight on <leader><space>
 nnoremap <leader><space> :nohlsearch<cr>
+" Make search wrap around
+set wrapscan
 
 " Keep the current line centered constantly
 set scrolloff=999
@@ -269,12 +272,15 @@ nnoremap U <C-r>
 noremap <leader>- YpVr-
 noremap <leader>= YpVr=
 
+" Use <Space> to toggle folds in normal mode
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+
 " Tell netrw to keep its history file in ~/.vim/tmp
-let g:netrw_home = '~/.vim/tmp'
+"let g:netrw_home = '~/.vim/tmp'
 
 " Keep temporary files out of working directories. Trailing double-slash tells
 " vim to base the filename on the full path of the original to avoid conflicts.
-set directory=~/.vim/tmp/swap//
+"set directory=~/.vim/tmp/swap//
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
