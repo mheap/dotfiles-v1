@@ -40,3 +40,8 @@ function cd() {
 # Smart defaults
 alias mkdir='mkdir -p'
 alias serve='python -m SimpleHTTPServer'
+
+if [ $IS_OSX -eq 0 ]; then
+    # Open on linux
+    alias open='xdg-open &> /dev/null';
+fi
