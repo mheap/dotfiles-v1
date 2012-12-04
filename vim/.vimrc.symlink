@@ -63,7 +63,8 @@ imap <right> <nop>
 " Left/Right changes buffer
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
-
+" and <leader>c closes the buffer, but not the split
+nnoremap <leader>c :BD<CR>
 
 " Easy window navigation
 map <C-h> <C-w>h
