@@ -1,4 +1,3 @@
-" Set up Vundle
 set nocompatible               " be iMproved
 filetype off                   " required!
 
@@ -8,11 +7,18 @@ call pathogen#infect()
 " Set smart indenting
 filetype plugin indent on
 
+""""""""""""""""""""""""""""""
+"" BufEnter / BufLeave etc
+""""""""""""""""""""""""""""""
+
 " Reload this file every time I save it
 augroup myvimrchooks
     au!
     autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
+
+" When opening a file, change the current working dir to git root
+autocmd BufEnter * :call SetGitDir()
 
 """"""""""""""""""""""""""""""
 "" My actual config
@@ -21,28 +27,27 @@ augroup END
 " Change leader key to something less stupid
 let mapleader=","
 
-
-
 """"""""""""""""""""""""""""""
-"" How it looks
+"" How it looks + feels
 """"""""""""""""""""""""""""""
-
-" Big font size
-if has("gui_macvim")
-    set guifont=Bitstream\ Vera\ Sans\ Mono:h18
-else
-    set guifont=Bitstream\ Vera\ Sans\ Mono\ 14
-endif
 
 " Solarized colours
 syntax enable
 set background=dark
 colorscheme solarized
 
+" In xterm, set the tab's title to the current file
+set title
+
+" Enable mouse support
+set mouse=a
+
+" Remove intro message
+set shortmess=atI
 
 
 """"""""""""""""""""""""""""""
-"" Mappings
+"" General Mappings
 """"""""""""""""""""""""""""""
 " Map ; to :
 nnoremap ; :
@@ -60,11 +65,13 @@ imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
+""""""""""""""""""""""""""""""
+"" Buffer Mappings
+""""""""""""""""""""""""""""""
+
 " Left/Right changes buffer
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
-" and <leader>c closes the buffer, but not the split
-nnoremap <leader>c :BD<CR>
 
 " Easy window navigation
 map <C-h> <C-w>h
@@ -72,54 +79,65 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+""""""""""""""""""""""""""""""
+"" F-Keys Mappings
+""""""""""""""""""""""""""""""
+
 " Reindent!
 map <F7> mzgg=G`z
 
+""""""""""""""""""""""""""""""
+"" Command bar config
+""""""""""""""""""""""""""""""
+
+" Always show a ruler
+set ruler
+
+" Set it's height to 
+2
+set cmdheight=2
+" Always show
+set laststatus=2
+
+" Show the current line+column, then current working dir, then current file.
+" Then show if it's read only, then if it's a help pane, then if it's a
+" preview window. Next, show git status with fugitive, then any syntax errors
+" with Syntastic
+set statusline=[%l,%v][CWD:\ %{CWD()}][FILE:\ %f]\ %r%h%w\ %{fugitive#statusline()}\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
+
+" Show command info, e.g. {lines}x{columns} when in visual
+set showcmd
+
+" Show what mode we're in too
+set showmode
+
 """""""""""""""""""""""""
-"" Helpful functions
+"" Searching
 """""""""""""""""""""""""
-
-" Set working dir to git root
-function! SetGitDir()
-    " Change working dir to the current file
-    cd %:p:h
-    " Set 'gitdir' to be the folder containing .git
-    let gitdir=system("git rev-parse --show-toplevel")
-    " See if the command output starts with 'fatal' (if it does, not in a git repo)
-    let isnotgitdir=matchstr(gitdir, '^fatal:.*')
-    " If it empty, there was no error. Let's cd
-    if empty(isnotgitdir)
-        cd `=gitdir`
-    endif
-endfunction
-
-" Get the current working dir, nicely formatted
-function! CWD()
-    let curdir = substitute(getcwd(), '/Users/michael', "~", "g")
-    let curdir = substitute(curdir, '/home/michael', "~", "g")
-    return curdir
-endfunction
-
-"""""""""""""""""""""""""
-"" Set various options
-"""""""""""""""""""""""""
-
-" hidden - http://usevim.com/2012/10/19/vim101-set-hidden/
-set hidden
-
-" Tabs = 4 spaces
-"set tabstop=4 shiftwidth=4 expandtab softtabstop=4
-set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
 " Case insensitive searching, unless it contains a capital
 set ignorecase smartcase
 
-" Show current line
-set cursorline
+" Enable find-as-you-type searching
+set incsearch
+
+" Highlight all matches
+set hlsearch
+
+" Disable search highlight on <leader><space>
+nnoremap <leader><space> :nohlsearch<cr>
+
+" Make search wrap around
+set wrapscan
+
+"""""""""""""""""""""""""
+"" Word completion
+"""""""""""""""""""""""""
 
 " Enable file completing a la ZSH when using tab to complete file names
 " aka: Complete to the longest common substring then cycle through
 set wildmode=longest,full
+
 " Ignore some file types when completing
 set wildignore+=.hg,.git,.svn                    " Version control
 set wildignore+=*.aux,*.out,*.toc                " LaTeX intermediate files
@@ -133,64 +151,75 @@ set wildignore+=*.pyc                            " Python byte code
 set wildignore+=*.orig                           " Merge resolution files
 set wildignore+=*.zip,*.rar                      " Ignore archive files
 
-" Enable find-as-you-type searching
-set incsearch
-" Highlight all matches
-set hlsearch
-" Disable search highlight on <leader><space>
-nnoremap <leader><space> :nohlsearch<cr>
-" Make search wrap around
-set wrapscan
+"""""""""""""""""""""""""
+"" Set various options
+"""""""""""""""""""""""""
 
-" Keep the current line centered constantly
-set scrolloff=999
+" hidden - http://usevim.com/2012/10/19/vim101-set-hidden/
+set hidden
+
+" Tabs = 4 spaces
+"set tabstop=4 shiftwidth=4 expandtab softtabstop=4
+set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+
+" Show current line
+set cursorline
+
+" Keep 15 lines from the top/bottom at all times
+set scrolloff=15
+
 " Keep 15 chars to the right/left visible + scroll 1 char at a time
 set sidescrolloff=15
 set sidescroll=1
 
-" Toggle 'keep current line in the center of the screen' mode
-nnoremap <leader>C :let &scrolloff=999-&scrolloff<cr>
+" Show trailing whitespace
+set list listchars=tab:»·,trail:·
 
-" Remove intro message
-set shortmess=atI
+" Some general formatting options
+set formatoptions=
+set formatoptions+=c " Format comments
+set formatoptions+=r " Continue comments by default
+set formatoptions+=o " Make comment when using o or O from comment line
+set formatoptions+=q " Format comments with gq
+set formatoptions+=n " Recognize numbered lists
+set formatoptions+=2 " Use indent from 2nd line of a paragraph
+set formatoptions+=l " Don't break lines that are already long
+set formatoptions+=1 " Break before 1-letter words
 
-" Always show a ruler
-set ruler
+" New splits go below and to the right
+set splitbelow
+set splitright
 
-" Copy/Paste to and from Desktop Environment
-noremap <leader>yy "+y
-noremap <leader>pp "+gP
+" Highlight column 80
+if exists('+colorcolumn')
+  set colorcolumn=80
+else
+  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+endif
+
+" Unify cut+paste with system (OSX Only)
+if version >= 730 && has("macunix")
+  " Default yank and paste go to Mac's clipboard
+  set clipboard=unnamed
+end
+
+" Tell netrw to keep its history file in ~/.vim/tmp
+let g:netrw_home = '~/.vim/tmp'
+
+" Keep temporary files out of working directories. Trailing double-slash tells
+" vim to base the filename on the full path of the original to avoid conflicts.
+set directory=~/.vim/tmp/swap//
+
+"""""""""""""""""""""""""
+"" Remap various options
+"""""""""""""""""""""""""
 
 " Set working directory (usually for ctags)
 nnoremap <leader>. :call SetGitDir()<CR>
 
-" Time to set up a command line that's useful
-" Set it's height to 2
-set cmdheight=2
-" Always show
-set laststatus=2
-" Show the current line+column, then current working dir, then current file.
-" Then show if it's read only, then if it's a help pane, then if it's a
-" preview window. Next, show git status with fugitive, then any syntax errors
-" with Syntastic
-set statusline=[%l,%v][CWD:\ %{CWD()}][FILE:\ %f]\ %r%h%w\ %{fugitive#statusline()}\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
-" Show command info, e.g. {lines}x{columns} when in visual
-set showcmd
-" Show what mode we're in too
-set showmode
-
-" When opening a file, change the current working dir to git root
-autocmd BufEnter * :call SetGitDir()
-
-" Show trailing whitespace
-set list listchars=tab:»·,trail:·
-
 " In visual block mode, make tab/shift-tab indent/outdent
 vmap <Tab> >
 vmap <S-Tab> <
-
-" Make commands time out after 300ms so I can type jj
-set timeoutlen=300
 
 " Jump to first char with 0, and beginning of line with ^
 nnoremap 0 ^
@@ -218,49 +247,15 @@ map <silent><C-Right> :vertical resize +5<cr>
 " Don't deselect when using tab/shift-tab in visual mode
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" Allow tab in normal mode
-nnoremap <tab> >>
-nnoremap <s-tab> <<
-
-" Some general formatting options
-set formatoptions=
-set formatoptions+=c " Format comments
-set formatoptions+=r " Continue comments by default
-set formatoptions+=o " Make comment when using o or O from comment line
-set formatoptions+=q " Format comments with gq
-set formatoptions+=n " Recognize numbered lists
-set formatoptions+=2 " Use indent from 2nd line of a paragraph
-set formatoptions+=l " Don't break lines that are already long
-set formatoptions+=1 " Break before 1-letter words
-
-" New splits go below and to the right
-set splitbelow
-set splitright
 
 " Force saving files that need root
 cmap w!! %!sudo tee > /dev/null %
-
-" Highlight column 80
-if exists('+colorcolumn')
-  set colorcolumn=80
-else
-  au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
-endif
-
-" In xterm, set the tab's title to the current file
-set title
 
 " Jump to tag with ,F
 nnoremap <silent> <leader>F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
 
 " This is a cheat, but it's useful. Enable <cr> in normal mode
 nnoremap <silent> <CR> :put=''<CR>
-
-" Unify cut+paste with system (OSX Only)
-if version >= 730 && has("macunix")
-  " Default yank and paste go to Mac's clipboard
-  set clipboard=unnamed
-end
 
 " Use <space> to toggle folds
 nnoremap <Space> za
@@ -273,15 +268,30 @@ nnoremap U <C-r>
 noremap <leader>- YpVr-
 noremap <leader>= YpVr=
 
-" Use <Space> to toggle folds in normal mode
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+"""""""""""""""""""""""""
+"" Helpful functions
+"""""""""""""""""""""""""
 
-" Tell netrw to keep its history file in ~/.vim/tmp
-"let g:netrw_home = '~/.vim/tmp'
+" Set working dir to git root
+function! SetGitDir()
+    " Change working dir to the current file
+    cd %:p:h
+    " Set 'gitdir' to be the folder containing .git
+    let gitdir=system("git rev-parse --show-toplevel")
+    " See if the command output starts with 'fatal' (if it does, not in a git repo)
+    let isnotgitdir=matchstr(gitdir, '^fatal:.*')
+    " If it empty, there was no error. Let's cd
+    if empty(isnotgitdir)
+        cd `=gitdir`
+    endif
+endfunction
 
-" Keep temporary files out of working directories. Trailing double-slash tells
-" vim to base the filename on the full path of the original to avoid conflicts.
-"set directory=~/.vim/tmp/swap//
+" Get the current working dir, nicely formatted
+function! CWD()
+    let curdir = substitute(getcwd(), '/Users/michael', "~", "g")
+    let curdir = substitute(curdir, '/home/michael', "~", "g")
+    return curdir
+endfunction
 
 """"""""""""""""""""""""""""""
 "" Plugin settings
@@ -297,18 +307,16 @@ let g:ctrlp_custom_ignore = {
 "" Plugin mappings
 """"""""""""""""""""""""""""""
 
-" Map NERDTree to ,d
+""""" NERDTree.vim
 nnoremap <leader>d :NERDTreeToggle<cr>
-" NERDTree with current file with ,s
-nnoremap <leader>s :NERDTreeFind<cr>
 
-" Map LustyJuggler to ,b
+""""" LustyJuggler.vim
 nnoremap <leader>b :LustyJuggler<cr>
 
-" Map tagbar to ,l
+""""" tagbar.vim
 nnoremap <leader>l :TagbarToggle<CR>
 
-" Fugitive mappings
+""""" fugitive.vim
 nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gs :Gstatus<cr>
 nnoremap <leader>gw :Gwrite<cr>
@@ -318,3 +326,7 @@ nnoremap <leader>gco :Gcheckout<cr>
 nnoremap <leader>gci :Gcommit<cr>
 nnoremap <leader>gm :Gmove<cr>
 nnoremap <leader>gr :Gremove<cr>
+
+""""" bufkill.vim
+" <leader>c closes the buffer, but not the split
+nnoremap <leader>c :BD<CR>
