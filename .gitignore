@@ -2,3 +2,4 @@ ssh
 vim/.vim.symlink/.netrwhist
 vim/.vim.symlink/tmp
 i3/.i3.symlink/config.save
+machine-specific/mike
