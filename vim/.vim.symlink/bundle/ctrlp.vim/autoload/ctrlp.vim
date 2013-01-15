@@ -759,8 +759,10 @@ fu! s:PrtDeleteMRU()
 endf
 
 fu! s:PrtExit()
-	if !has('autocmd') | cal s:Close() | en
-	exe ( winnr('$') == 1 ? 'bw!' : 'winc p' )
+	if bufnr('%') == s:bufnr && bufname('%') == 'ControlP'
+		if !has('autocmd') | cal s:Close() | en
+		exe ( winnr('$') == 1 ? 'bw!' : 'winc p' )
+	en
 endf
 
 fu! s:PrtHistory(...)
@@ -1990,7 +1992,7 @@ endf
 
 fu! s:insertcache(str)
 	let [data, g:ctrlp_newcache, str] = [g:ctrlp_allfiles, 1, a:str]
-	if strlen(str) <= strlen(data[0])
+	if data == [] || strlen(str) <= strlen(data[0])
 		let pos = 0
 	elsei strlen(str) >= strlen(data[-1])
 		let pos = len(data) - 1

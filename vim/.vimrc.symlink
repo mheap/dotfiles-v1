@@ -203,8 +203,11 @@ if version >= 730 && has("macunix")
   set clipboard=unnamed
 end
 
+" Don't add an EOL if the file doesn't have one already
+set noeol
+
 " Tell netrw to keep its history file in ~/.vim/tmp
-let g:netrw_home = '~/.vim/tmp'
+let g:netrw_home = '/tmp'
 
 " Keep temporary files out of working directories. Trailing double-slash tells
 " vim to base the filename on the full path of the original to avoid conflicts.
@@ -330,3 +333,7 @@ nnoremap <leader>gr :Gremove<cr>
 """"" bufkill.vim
 " <leader>c closes the buffer, but not the split
 nnoremap <leader>c :BD<CR>
+
+
+au! BufNewFile,BufRead *.twig set filetype=javascript
+au! BufNewFile,BufRead *.swig set filetype=javascript

@@ -24,6 +24,9 @@ git_bundles = [
     "git://github.com/vim-scripts/phpfolding.vim.git", # PHP Folding
     "git://github.com/stephpy/vim-phpdoc.git", # Easy PHPDocs
     "git://github.com/vim-scripts/bufkill.vim.git", # Buffer closing
+    "git://github.com/gregsexton/gitv.git", # gitv
+    "git://github.com/tpope/vim-sleuth.git", # Autodetect indentation rules
+    "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
