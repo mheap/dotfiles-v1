@@ -72,7 +72,7 @@ endfunction
 
 
 function! s:UsedMarks() "                             {{{2
-  " Description: Return a list of marks that are in use in the current buffer
+  " Description: Returns a list of [mark, line no.] pairs that are in use in the current buffer
 
   let l:return_var = filter(s:MarksList(), 'v:val[1]>0')
 
@@ -230,6 +230,7 @@ function! s:ToggleSign( mark, mode, lnum ) "          {{{2
   let l:SignatureIncludeMarkers = ( exists('b:SignatureIncludeMarkers') ? b:SignatureIncludeMarkers : g:SignatureIncludeMarkers )
   let l:SignatureLcMarkStr  = ( exists('b:SignatureLcMarkStr')    ? b:SignatureLcMarkStr  : g:SignatureLcMarkStr    )
   let l:SignatureUcMarkStr  = ( exists('b:SignatureUcMarkStr')    ? b:SignatureUcMarkStr  : g:SignatureUcMarkStr    )
+  let l:SignatureSignTextHL  = ( exists('b:SignatureSignTextHL')    ? b:SignatureSignTextHL  : g:SignatureSignTextHL    )
 
   if stridx(l:SignatureIncludeMarkers, a:mark) >= 0
     " Visual marker has been set
@@ -248,7 +249,7 @@ function! s:ToggleSign( mark, mode, lnum ) "          {{{2
           let l:str = substitute(l:SignatureUcMarkStr, "\m", l:mark, "")
         endif
         let l:str = substitute(l:str, "\p", strpart(b:sig_marks[l:lnum], 1, 1), "")
-        execute 'sign define sig_Mark_' . l:id . ' text=' . l:str . ' texthl=Exception'
+        execute 'sign define sig_Mark_' . l:id . ' text=' . l:str . ' texthl=' . l:SignatureSignTextHL
         execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=sig_Mark_' . l:id . ' buffer=' . winbufnr(0)
       else
         execute 'sign unplace ' . l:id
@@ -269,7 +270,7 @@ function! s:ToggleSign( mark, mode, lnum ) "          {{{2
       let l:save_ic = &ic | set noic
       let b:sig_marks[l:lnum] = substitute(b:sig_marks[l:lnum], a:mark, "", "")
       let &ic = l:save_ic
-      if empty(b:sig_marks[l:lnum]) 
+      if empty(b:sig_marks[l:lnum])
         call remove(b:sig_marks, l:lnum)
         if !has_key(b:sig_markers, l:lnum)
           execute 'sign unplace ' . l:id
@@ -286,7 +287,7 @@ function! s:ToggleSign( mark, mode, lnum ) "          {{{2
         let l:str = substitute(l:SignatureUcMarkStr, "\m", l:mark, "")
       endif
       let l:str = substitute(l:str, "\p", strpart(b:sig_marks[l:lnum], 1, 1), "")
-      execute 'sign define sig_Mark_' . l:id . ' text=' . l:str . ' texthl=Exception'
+      execute 'sign define sig_Mark_' . l:id . ' text=' . l:str . ' texthl=' . l:SignatureSignTextHL
       execute 'sign place ' . l:id . ' line=' . l:lnum . ' name=sig_Mark_' . l:id . ' buffer=' . winbufnr(0)
     endif
   endif
@@ -319,41 +320,55 @@ function! s:GotoMarkByPos( dir ) "                    {{{2
   let l:SignatureWrapJumps = ( exists('b:SignatureWrapJumps') ? b:SignatureWrapJumps : g:SignatureWrapJumps )
 
   let l:MarksList = s:UsedMarks()
-  if len(l:MarksList) < 2 | return "" | endif
+  " We need at least one mark to be present
+  if ( len(l:MarksList) < 1 ) | return "" | endif
 
-  let l:pos  = line('.')
-  let l:mark = ""
+  let l:pos    = line('.')
+  let l:mark     = ""
   let l:mark_first = ""
-  let l:dist = 0
+  let l:dist     = 0
 
   if a:dir ==? "next"
     let l:pos_first = line('$') + 1
     for m in l:MarksList
-      if m[1] > l:pos && ( l:dist == 0 || m[1] - l:pos < l:dist )
+      " Find the mark that comes just after the current line
+      if (( m[1] > l:pos ) && ( l:dist == 0 || m[1] - l:pos < l:dist ))
         let l:mark = m[0]
         let l:dist = m[1] - l:pos
       endif
-      if m[1] < l:pos_first
+      " Find the mark that is present first, in case the current line doesn't
+      " have any mark after it and we have to wrap around to the start.
+      if ( m[1] < l:pos_first )
         let l:mark_first = m[0]
         let l:pos_first  = m[1]
       endif
     endfor
+    " If l:mark is an empty string then it means that there is no mark after the current line till EOF
+    " Hence, if WrapJumps is enabled, wrap around to the first mark present in the file
+    if ( empty(l:mark) && l:SignatureWrapJumps )
+      let l:mark = l:mark_first
+    endif
+
   elseif a:dir ==? "prev"
-    let l:pos_first = 0
+    let l:pos_last = 0
     for m in l:MarksList
-      if m[1] < l:pos && ( l:dist == 0 || l:pos - m[1] < l:dist )
+      " Find the mark that comes just before the current line
+      if (( m[1] < l:pos ) && ( l:dist == 0 || l:pos - m[1] < l:dist ))
         let l:mark = m[0]
         let l:dist = l:pos - m[1]
       endif
-      if m[1] > l:pos_first
-        let l:mark_first = m[0]
-        let l:pos_first  = m[1]
+      " Find the mark that is present last, in case the current line doesn't
+      " have any mark after it and we have to wrap around to the end.
+      if ( m[1] > l:pos_last )
+        let l:mark_last = m[0]
+        let l:pos_last  = m[1]
       endif
     endfor
-  endif
-
-  if empty(l:mark) && l:SignatureWrapJumps
-    let l:mark = l:mark_first
+    " If l:mark is an empty string then it means that there is no mark before the current line till start of file
+    " Hence, if WrapJumps is enabled, wrap around to the last mark present in the file
+    if ( empty(l:mark) && l:SignatureWrapJumps )
+      let l:mark = l:mark_last
+    endif
   endif
 
   return l:mark
@@ -363,11 +378,12 @@ endfunction
 function! s:GotoMarkByAlpha( dir ) "                  {{{2
   let l:SignatureWrapJumps = ( exists('b:SignatureWrapJumps') ? b:SignatureWrapJumps : g:SignatureWrapJumps )
 
-  let l:UsedMarks = s:UsedMarks()
-  let l:MarksAt = s:MarksAt(line('.'))
-  let l:mark = ""
+  let l:UsedMarks  = s:UsedMarks()
+  let l:MarksAt    = s:MarksAt(line('.'))
+  let l:mark       = ""
   let l:mark_first = ""
 
+  " If there is no mark present on the current line then call GotoMarkByPos to jump to the next line with a mark
   if empty(l:MarksAt)
     if exists('b:sig_GotoMarkByAlpha')
       unlet b:sig_GotoMarkByAlpha
@@ -385,7 +401,7 @@ function! s:GotoMarkByAlpha( dir ) "                  {{{2
         if i != len(l:UsedMarks)-1
           let l:mark = l:UsedMarks[i+1][0]
           let b:sig_GotoMarkByAlpha = l:mark
-        elseif l:SignatureWrapJumps 
+        elseif l:SignatureWrapJumps
           let l:mark = l:UsedMarks[0][0]
           let b:sig_GotoMarkByAlpha = l:mark
         endif
@@ -472,38 +488,68 @@ function! s:BufferMaps( mode ) "                      {{{2
 
   if ( a:mode && !b:sig_map_set ) "                   {{{
 
-    for i in split(g:SignatureIncludeMarks, '\zs')
-      silent exec 'nnoremap <buffer> <silent> ' . g:SignatureMarkLeader . i . ' :call signature#ToggleMark("' . i . '")<CR>'
+    " Create maps for marks a-z, A-Z
+    for i in split( g:SignatureIncludeMarks, '\zs' )
+      if maparg( g:SignatureMarkLeader . i, 'n' ) == ""
+        silent exec 'nnoremap <buffer> <unique> <silent> ' . g:SignatureMarkLeader . i . ' :call signature#ToggleMark("' . i . '")<CR>'
+      endif
     endfor
 
+    " Create maps for markers !@#$%^&*()
     let s:signature_markers = split(g:SignatureIncludeMarkers, '\zs')
     for i in range(0, len(s:signature_markers)-1)
-      exec 'sign define sig_Marker_' . i . ' text=' . s:signature_markers[i] . ' texthl=WarningMsg'
-      silent exec 'nnoremap <buffer> <silent> ' . g:SignatureMarkerLeader . i . ' :call signature#ToggleMarker("' . s:signature_markers[i] . '")<CR>'
-      silent exec 'nnoremap <buffer> <silent> ' . g:SignatureMarkerLeader . s:signature_markers[i] . ' :call signature#RemoveMarker("' . s:signature_markers[i] . '")<CR>'
+      if maparg( g:SignatureMarkerLeader . i, 'n' ) == ""
+        exec 'sign define sig_Marker_' . i . ' text=' . s:signature_markers[i] . ' texthl=WarningMsg'
+        silent exec 'nnoremap <buffer> <unique> <silent>' . g:SignatureMarkerLeader . i . ' :call signature#ToggleMarker("' . s:signature_markers[i] . '")<CR>'
+        silent exec 'nnoremap <buffer> <unique> <silent>' . g:SignatureMarkerLeader . s:signature_markers[i] . ' :call signature#RemoveMarker("' . s:signature_markers[i] . '")<CR>'
+      endif
     endfor
 
     if g:SignatureDefaultMappings
-      if !hasmapto( '<Plug>SIG_PlaceNextMark' )
+      " Using hasmapto() allows a flexibility to use custom mappings along with the default mappings.
+      " If g:SignatureDefaultMappings has been set but a particular <Plug> has already been mapped,
+      " it will be skipped and the default mapping won't be assigned.
+
+      if !hasmapto( '<Plug>SIG_PlaceNextMark' ) && maparg( g:SignatureMarkerLeader . ',', 'n' ) == ""
         exec 'nmap <buffer> ' . g:SignatureMarkLeader . ', <Plug>SIG_PlaceNextMark'
       endif
-      if !hasmapto( '<Plug>SIG_PurgeMarks' )
+      if !hasmapto( '<Plug>SIG_PurgeMarks' ) && maparg( g:SignatureMarkerLeader . '<Space>', 'n' ) == ""
         exec 'nmap <buffer> ' . g:SignatureMarkLeader . '<Space> <Plug>SIG_PurgeMarks'
       endif
-      if !hasmapto( '<Plug>SIG_PurgeMarkers' )
+      if !hasmapto( '<Plug>SIG_PurgeMarkers' ) && maparg( g:SignatureMarkerLeader . '<BS>', 'n' ) == ""
         exec 'nmap <buffer> ' . g:SignatureMarkerLeader . '<BS> <Plug>SIG_PurgeMarkers'
       endif
 
-      if !hasmapto( '<Plug>SIG_NextLineByAlpha'  ) | nmap <buffer> '] <Plug>SIG_NextLineByAlpha| endif
-      if !hasmapto( '<Plug>SIG_PrevLineByAlpha'  ) | nmap <buffer> '[ <Plug>SIG_PrevLineByAlpha| endif
-      if !hasmapto( '<Plug>SIG_NextSpotByAlpha'  ) | nmap <buffer> `] <Plug>SIG_NextSpotByAlpha| endif
-      if !hasmapto( '<Plug>SIG_PrevSpotByAlpha'  ) | nmap <buffer> `[ <Plug>SIG_PrevSpotByAlpha| endif
-      if !hasmapto( '<Plug>SIG_NextLineByPos'    ) | nmap <buffer> ]' <Plug>SIG_NextLineByPos| endif
-      if !hasmapto( '<Plug>SIG_PrevLineByPos'    ) | nmap <buffer> [' <Plug>SIG_PrevLineByPos| endif
-      if !hasmapto( '<Plug>SIG_NextSpotByPos'    ) | nmap <buffer> ]` <Plug>SIG_NextSpotByPos| endif
-      if !hasmapto( '<Plug>SIG_PrevSpotByPos'    ) | nmap <buffer> [` <Plug>SIG_PrevSpotByPos| endif
-      if !hasmapto( '<Plug>SIG_NextMarkerByType' ) | nmap <buffer> ]- <Plug>SIG_NextMarkerByType| endif
-      if !hasmapto( '<Plug>SIG_PrevMarkerByType' ) | nmap <buffer> [- <Plug>SIG_PrevMarkerByType| endif
+      if !hasmapto( '<Plug>SIG_NextLineByAlpha' ) && maparg( "']", 'n' ) == ""
+        nmap <buffer> '] <Plug>SIG_NextLineByAlpha
+      endif
+      if !hasmapto( '<Plug>SIG_PrevLineByAlpha' ) && maparg( "'[", 'n' ) == ""
+        nmap <buffer> '[ <Plug>SIG_PrevLineByAlpha
+      endif
+      if !hasmapto( '<Plug>SIG_NextSpotByAlpha' ) && maparg( "`]", 'n' ) == ""
+        nmap <buffer> `] <Plug>SIG_NextSpotByAlpha
+      endif
+      if !hasmapto( '<Plug>SIG_PrevSpotByAlpha' ) && maparg( "`[", 'n' ) == ""
+        nmap <buffer> `[ <Plug>SIG_PrevSpotByAlpha
+      endif
+      if !hasmapto( '<Plug>SIG_NextLineByPos' ) && maparg( "]'", 'n' ) == ""
+        nmap <buffer> ]' <Plug>SIG_NextLineByPos
+      endif
+      if !hasmapto( '<Plug>SIG_PrevLineByPos' ) && maparg( "['", 'n' ) == ""
+        nmap <buffer> [' <Plug>SIG_PrevLineByPos
+      endif
+      if !hasmapto( '<Plug>SIG_NextSpotByPos') && maparg( "]`", 'n' ) == ""
+        nmap <buffer> ]` <Plug>SIG_NextSpotByPos
+      endif
+      if !hasmapto( '<Plug>SIG_PrevSpotByPos' ) && maparg( "[`", 'n' ) == ""
+        nmap <buffer> [` <Plug>SIG_PrevSpotByPos
+      endif
+      if !hasmapto( '<Plug>SIG_NextMarkerByType' ) && maparg( "]-", 'n' ) == ""
+        nmap <buffer> ]- <Plug>SIG_NextMarkerByType
+      endif
+      if !hasmapto( '<Plug>SIG_PrevMarkerByType' ) && maparg( "[-", 'n' ) == ""
+        nmap <buffer> [- <Plug>SIG_PrevMarkerByType
+      endif
     endif
 
     let b:sig_map_set = 1

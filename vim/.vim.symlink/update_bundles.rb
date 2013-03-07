@@ -10,21 +10,16 @@ git_bundles = [
     "git://github.com/Lokaltog/vim-easymotion.git", # Quick navigation inside a buffer
     "git://github.com/myusuf3/numbers.vim.git", # Relative line numbers in normal mode
     "git://github.com/scrooloose/nerdtree.git", # Tree file viewer
-    "git://github.com/vim-scripts/LustyJuggler.git", # Buffer manager
     "git://github.com/kien/ctrlp.vim.git", # Fuzzy matching file opener
-    "git://github.com/majutsushi/tagbar.git", # Tagbar (newer taglist) (needs ctags)
-    "git://github.com/vim-scripts/AutoTag.git", # Renegerate ctags when file is saved
     "git://github.com/Raimondi/delimitMate.git", # Smart quote/parethesis closing
     "git://github.com/docunext/closetag.vim.git", # Auto close HTML tags
     "git://github.com/ervandew/supertab.git", # Insert mode tab completion
     "git://github.com/tpope/vim-surround.git", # Easily change surrounding text
     "git://github.com/scrooloose/syntastic.git", # Inline syntax checking
-    "git://github.com/tpope/vim-fugitive.git", # Git support so good it should be illegal
     "git://github.com/tristen/vim-sparkup.git", # Zen-coding-esque expansion
     "git://github.com/vim-scripts/phpfolding.vim.git", # PHP Folding
     "git://github.com/stephpy/vim-phpdoc.git", # Easy PHPDocs
     "git://github.com/vim-scripts/bufkill.vim.git", # Buffer closing
-    "git://github.com/gregsexton/gitv.git", # gitv
     "git://github.com/tpope/vim-sleuth.git", # Autodetect indentation rules
     "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
 

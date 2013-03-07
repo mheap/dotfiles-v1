@@ -11,6 +11,11 @@
 "
 "============================================================================
 
+if exists("g:loaded_syntastic_java_javac_checker")
+    finish
+endif
+let g:loaded_syntastic_java_javac_checker=1
+
 " Global Options
 if !exists("g:syntastic_java_javac_executable")
     let g:syntastic_java_javac_executable = 'javac'
@@ -158,7 +163,11 @@ function! s:GetMavenClasspath()
     return ''
 endfunction
 
-function! SyntaxCheckers_java_GetLocList()
+function! SyntaxCheckers_java_javac_IsAvailable()
+    return executable(g:syntastic_java_javac_executable)
+endfunction
+
+function! SyntaxCheckers_java_javac_GetLocList()
 
     let javac_opts = g:syntastic_java_javac_options 
 
@@ -180,7 +189,11 @@ function! SyntaxCheckers_java_GetLocList()
     " add classpathes to javac_classpath
     for path in split(g:syntastic_java_javac_classpath,"\n")
         if path != ''
-            let ps = glob(path,0,1)
+            try
+                let ps = glob(path,0,1)
+            catch
+                let ps = split(glob(path,0),"\n")
+            endtry
             if type(ps) == type([])
                 for p in ps
                     if p != '' | let javac_classpath = s:AddToClasspath(javac_classpath,p) | endif
@@ -208,9 +221,12 @@ function! SyntaxCheckers_java_GetLocList()
         let sep = '/'
     endif
 
-    let makeprg = g:syntastic_java_javac_executable . ' '. javac_opts . ' '
-               \. fnameescape(expand ( '%:p:h' ) . sep . expand ( '%:t' ))
-               \. ' 2>&1 '
+    let makeprg = syntastic#makeprg#build({
+                \ 'exe': g:syntastic_java_javac_executable,
+                \ 'args': javac_opts,
+                \ 'fname': fnameescape(expand ( '%:p:h' ) . sep . expand ( '%:t' )),
+                \ 'tail': '2>&1',
+                \ 'subchecker': 'javac' })
 
     " unashamedly stolen from *errorformat-javac* (quickfix.txt) and modified to include error types
     let errorformat = '%E%f:%l:\ error:\ %m,%W%f:%l:\ warning:\ %m,%A%f:%l:\ %m,%+Z%p^,%+C%.%#,%-G%.%#'
@@ -225,3 +241,8 @@ function! SyntaxCheckers_java_GetLocList()
     return r
 
 endfunction
+
+call g:SyntasticRegistry.CreateAndRegisterChecker({
+    \ 'filetype': 'java',
+    \ 'name': 'javac'})
+

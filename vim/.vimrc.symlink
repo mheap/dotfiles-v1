@@ -302,7 +302,7 @@ endfunction
 " Ignore vendor (composer), node_modules (npm) and any VCS folders.
 " Don't forget to run :ClearAllCtrlPCaches when changing this
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](vendor|node_modules|\.(git|hg|svn))$',
+  \ 'dir':  '\v[\/](node_modules|\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ }
 
