@@ -101,9 +101,8 @@ set laststatus=2
 
 " Show the current line+column, then current working dir, then current file.
 " Then show if it's read only, then if it's a help pane, then if it's a
-" preview window. Next, show git status with fugitive, then any syntax errors
-" with Syntastic
-set statusline=[%l,%v][CWD:\ %{CWD()}][FILE:\ %f]\ %r%h%w\ %{fugitive#statusline()}\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
+" preview window. Next, show any syntax errors with Syntastic
+set statusline=[%l,%v][CWD:\ %{CWD()}][FILE:\ %f]\ %r%h%w\ %#warningmsg#%{SyntasticStatuslineFlag()}%*
 
 " Show command info, e.g. {lines}x{columns} when in visual
 set showcmd
