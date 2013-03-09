@@ -10,10 +10,6 @@ alias l="$LS_COM -lAh --color"
 alias ll="$LS_COM -l --color"
 alias la='$LS_COM -A --color'
 
-# grep colouring
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-
 # From http://dotfiles.org/~_why/.zshrc
 # Sets the window title nicely no matter where you are
 function title() {

@@ -16,6 +16,9 @@
         rank-contributers = !$ZSH/bin/git-rank-contributers
         count   = !git shortlog -sn
 	lg = !git log --graph --pretty=oneline --abbrev-commit --decorate
+	ci = !$ZSH/bin/git-ci
+	conflicts = !$ZSH/bin/git-conflicts
+
 [color]
         diff = auto
         status = auto
@@ -31,7 +34,7 @@
 [difftool]
         prompt = false
 [help]
-        autocorrect = 1
+	autocorrect = 1
 
 # Any GitHub repo with my username should be checked out r/w by default
 # http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
