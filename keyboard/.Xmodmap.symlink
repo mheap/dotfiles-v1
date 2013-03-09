@@ -1,2 +1,4 @@
 clear Lock
 keycode 66 = Super_L
+keycode 122 = XF86AudioLowerVolume
+keycode 123 = XF86AudioRaiseVolume

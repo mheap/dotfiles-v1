@@ -89,7 +89,7 @@ bindsym $mod+2 workspace 2: www
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6: term
+bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
@@ -126,4 +126,16 @@ bar {
     status_command    i3status
 }
 
-#i3lock -i /path/to/image
+
+bindsym XF86AudioLowerVolume exec amixer -c 0 -q set Master 2dB- unmute
+bindsym XF86AudioRaiseVolume exec amixer -c 0 -q set Master 2dB+ unmute
+bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+bindsym XF86AudioMute exec "~/bin/mute"
+
+
+
+# window colours: border background text
+bindsym $mod+y exec dmenu_run -nb "#090e14" -nf "#696f89" -sb "#d70a53" -sf "#FFFF50" -fn "Liberation Mono-8"
+
+bindsym $mod+Right move workspace to output right
+bindsym $mod+Left move workspace to output left
