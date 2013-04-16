@@ -19,7 +19,7 @@ function! SyntaxCheckers_php_php_IsAvailable()
     return executable("php")
 endfunction
 
-function! SyntaxCheckers_php_GetHighlightRegex(item)
+function! SyntaxCheckers_php_php_GetHighlightRegex(item)
     let unexpected = matchstr(a:item['text'], "unexpected '[^']\\+'")
     if len(unexpected) < 1
         return ''
@@ -30,7 +30,7 @@ endfunction
 function! SyntaxCheckers_php_php_GetLocList()
     let makeprg = syntastic#makeprg#build({
                 \ 'exe': 'php',
-                \ 'args': '-l -d error_reporting=E_ALL -d display_errors=1 -d log_errors=0',
+                \ 'args': '-l -d error_reporting=E_ALL -d display_errors=1 -d log_errors=0 -d xdebug.cli_color=0',
                 \ 'subchecker': 'php' })
     let errorformat='%-GNo syntax errors detected in%.%#,Parse error: %#syntax %trror\ , %m in %f on line %l,Parse %trror: %m in %f on line %l,Fatal %trror: %m in %f on line %l,%-G\s%#,%-GErrors parsing %.%#'
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })

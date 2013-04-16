@@ -1,7 +1,7 @@
 if exists("g:loaded_syntastic_loclist")
     finish
 endif
-let g:loaded_syntastic_list=1
+let g:loaded_syntastic_loclist=1
 
 let g:SyntasticLoclist = {}
 
@@ -21,6 +21,7 @@ function! g:SyntasticLoclist.New(rawLoclist)
     endfor
 
     let newObj._rawLoclist = llist
+    let newObj._hasErrorsOrWarningsToDisplay = -1
 
     return newObj
 endfunction
@@ -35,6 +36,10 @@ function! g:SyntasticLoclist.toRaw()
     return copy(self._rawLoclist)
 endfunction
 
+function! g:SyntasticLoclist.filteredRaw()
+    return copy(self._quietWarnings ? self.errors() : self._rawLoclist)
+endfunction
+
 function! g:SyntasticLoclist.isEmpty()
     return empty(self._rawLoclist)
 endfunction
@@ -44,10 +49,11 @@ function! g:SyntasticLoclist.length()
 endfunction
 
 function! g:SyntasticLoclist.hasErrorsOrWarningsToDisplay()
-    if empty(self._rawLoclist)
-        return 0
+    if self._hasErrorsOrWarningsToDisplay >= 0
+        return self._hasErrorsOrWarningsToDisplay
     endif
-    return len(self.errors()) || !self._quietWarnings
+    let self._hasErrorsOrWarningsToDisplay = empty(self._rawLoclist) ? 0 : (!self._quietWarnings || len(self.errors()))
+    return self._hasErrorsOrWarningsToDisplay
 endfunction
 
 function! g:SyntasticLoclist.errors()
@@ -90,3 +96,5 @@ function! g:SyntasticLoclist.filter(filters)
     endfor
     return rv
 endfunction
+
+" vim: set sw=4 sts=4 et fdm=marker:

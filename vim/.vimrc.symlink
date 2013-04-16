@@ -1,3 +1,4 @@
+
 set nocompatible               " be iMproved
 filetype off                   " required!
 
@@ -16,9 +17,6 @@ augroup myvimrchooks
     au!
     autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
-
-" When opening a file, change the current working dir to git root
-autocmd BufEnter * :call SetGitDir()
 
 """"""""""""""""""""""""""""""
 "" My actual config
@@ -205,6 +203,15 @@ end
 " Don't add an EOL if the file doesn't have one already
 set noeol
 
+" Assume /g flag on :s replaces
+set gdefault
+
+" No code folding
+set nofoldenable
+
+" Don't add the comment prefix when I hit enter or o/O on a comment line.
+set formatoptions-=or
+
 " Tell netrw to keep its history file in ~/.vim/tmp
 let g:netrw_home = '/tmp'
 
@@ -215,9 +222,6 @@ set directory=~/.vim/tmp/swap//
 """""""""""""""""""""""""
 "" Remap various options
 """""""""""""""""""""""""
-
-" Set working directory (usually for ctags)
-nnoremap <leader>. :call SetGitDir()<CR>
 
 " In visual block mode, make tab/shift-tab indent/outdent
 vmap <Tab> >
@@ -262,6 +266,7 @@ nnoremap <silent> <CR> :put=''<CR>
 " Use <space> to toggle folds
 nnoremap <Space> za
 vnoremap <Space> za
+set nofoldenable
 
 " Make U do the opposite of u (aka redo)
 nnoremap U <C-r>
@@ -273,20 +278,6 @@ noremap <leader>= YpVr=
 """""""""""""""""""""""""
 "" Helpful functions
 """""""""""""""""""""""""
-
-" Set working dir to git root
-function! SetGitDir()
-    " Change working dir to the current file
-    cd %:p:h
-    " Set 'gitdir' to be the folder containing .git
-    let gitdir=system("git rev-parse --show-toplevel")
-    " See if the command output starts with 'fatal' (if it does, not in a git repo)
-    let isnotgitdir=matchstr(gitdir, '^fatal:.*')
-    " If it empty, there was no error. Let's cd
-    if empty(isnotgitdir)
-        cd `=gitdir`
-    endif
-endfunction
 
 " Get the current working dir, nicely formatted
 function! CWD()

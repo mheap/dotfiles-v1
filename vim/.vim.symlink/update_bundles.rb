@@ -17,11 +17,11 @@ git_bundles = [
     "git://github.com/tpope/vim-surround.git", # Easily change surrounding text
     "git://github.com/scrooloose/syntastic.git", # Inline syntax checking
     "git://github.com/tristen/vim-sparkup.git", # Zen-coding-esque expansion
-    "git://github.com/vim-scripts/phpfolding.vim.git", # PHP Folding
     "git://github.com/stephpy/vim-phpdoc.git", # Easy PHPDocs
     "git://github.com/vim-scripts/bufkill.vim.git", # Buffer closing
     "git://github.com/tpope/vim-sleuth.git", # Autodetect indentation rules
     "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
+    "git://github.com/airblade/vim-rooter.git", # Set working dir based on parent .git dir
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax

@@ -26,7 +26,7 @@ let g:pdv_cfg_Uses = 1
 let g:pdv_cfg_paste = 1
 
 " Wether for PHP5 code PHP4 tags should be set, like @access,... (1|0)?
-if !exists("g:pdv_cfg_Uses")
+if !exists("g:pdv_cfg_php4always")
     let g:pdv_cfg_php4always = 0
 endif
 

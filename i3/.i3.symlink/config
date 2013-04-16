@@ -36,6 +36,7 @@ bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+p exec dmenu_run
+bindsym $mod+m exec "~/bin/windowswitcher"
 
 # Change focused window                                           ($mod+[hjkl])
 bindsym $mod+j focus down
@@ -82,6 +83,7 @@ bindsym $mod+Shift+i focus child
 
 # Common apps are sorted by workspace
 #assign [title="^irssi"] 10: im
+assign [class="^Chrome"] 2
 
 # switch to workspace
 bindsym $mod+1 workspace 1
