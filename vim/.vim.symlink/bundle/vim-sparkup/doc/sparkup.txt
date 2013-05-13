@@ -1,0 +1,110 @@
+*sparkup.txt*  Write fast CSS and HTML using sparkup syntax.
+
+Author:  Rico Sta. Cruz <http://ricostacruz.com>
+
+                                  Sparkup
+                            Lighting fast markup
+
+==============================================================================
+INTRODUCTION                                            *sparkup-introduction*
+
+Sparkup lets you write HTML code faster.
+Checkout this short screencast: http://www.youtube.com/watch?v=Jw3jipcenKc
+
+You can write HTML in a CSS-like syntax, and have Sparkup handle the expansion
+to full HTML code. It is designed to help output long blocks of HTML code in
+much fewer characters.
+
+Sparkup is written in Python and requires Python 2.5 or newer.
+
+==============================================================================
+GENERAL COMMANDS                                              *sparkup-usage*
+
+g:sparkup (Default: 'sparkup')                      Basic sparkup executable
+
+g:sparkupArgs (Default: '--no-last-newline')        Opt arg passed to sparkup
+
+g:sparkupExecuteMapping (Default: '<c-e>')          Mapping to execute sparkup
+
+g:sparkupNextMapping (Default: '<c-n>')             Mapping to jump to the
+                                                    next empty tag/attribute.
+
+==============================================================================
+EXAMPLES                                                    *sparkup-examples*
+
+  `div`
+    <div></div>
+
+  `div#header`
+    <div id="header"></div>
+
+  `div.align-left#header`
+    <div id="header" class="align-left"></div>
+
+  `div#header + div#footer`
+    <div id="header"></div>
+    <div id="footer"></div>
+
+  `#menu > ul`
+    <div id="menu">
+      <ul></ul>
+    </div>
+
+  `#menu > h3 + ul`
+    <div id="menu">
+      <h3></h3>
+      <ul></ul>
+    </div>
+
+  `#header > h1{Welcome to our site}`
+    <div id="header">
+      <h1>Welcome to our site</h1>
+    </div>
+
+  `a[href=index.html]{Home}`
+    <a href="index.html">Home</a>`
+
+  `ul > li*3`
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+
+  `ul > li.item-$*3`
+    <ul>
+      <li class="item-1"></li>
+      <li class="item-2"></li>
+      <li class="item-3"></li>
+    </ul>
+
+  `ul > li.item-$*3 > strong`
+    <ul>
+      <li class="item-1"><strong></strong></li>
+      <li class="item-2"><strong></strong></li>
+      <li class="item-3"><strong></strong></li>
+    </ul>
+
+`table > tr*2 > td.name + td*3`
+    <table>
+      <tr>
+        <td class="name"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="name"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+`#header > ul > li < p{Footer}`
+  <div id="header">
+    <ul>
+      <li></li>
+    </ul>
+    <p>Footer</p>
+  </div>

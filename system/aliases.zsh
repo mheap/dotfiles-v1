@@ -20,6 +20,7 @@ alias as='colourify as'
 alias gas='colourify gas'
 alias netstat='colourify netstat'
 alias ping='colourify ping'
+alias curl='colourify curl'
 
 # From http://dotfiles.org/~_why/.zshrc
 # Sets the window title nicely no matter where you are

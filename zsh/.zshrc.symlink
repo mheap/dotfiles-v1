@@ -36,8 +36,16 @@ setopt extendedhistory
 setopt auto_cd
 
 # Source every .zsh file in this repo
+i=0
 for config_file ($ZSH/**/*.zsh); do
-    [ -z "`echo $config_file | grep zsh-syntax-highlighting`" ] && source $config_file 
+    [ -n "`echo $config_file | grep "zsh/zsh"`" ] && continue
+    [ -n "`echo $config_file | grep "machine-specific"`" ] && continue
+    
+    source $config_file 
+#    i=$((i+1))
+#    ruby -e 'puts Time.now.to_f'
+#    echo $config_file;
+#    if [ $i = 5 ]; then; echo $config_file; break; fi;
 done
 
 # Anything in .localrc won't get pushed to Github
@@ -47,3 +55,4 @@ fi
 
 # Update path to point to $ZSH/bin
 PATH=$ZSH/bin:$PATH
+eval "$(rbenv init -)"
