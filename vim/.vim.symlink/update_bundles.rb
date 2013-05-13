@@ -22,6 +22,7 @@ git_bundles = [
     "git://github.com/tpope/vim-sleuth.git", # Autodetect indentation rules
     "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
     "git://github.com/airblade/vim-rooter.git", # Set working dir based on parent .git dir
+    "git://github.com/vim-scripts/IndexedSearch.git", # Show search N out of M message
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
