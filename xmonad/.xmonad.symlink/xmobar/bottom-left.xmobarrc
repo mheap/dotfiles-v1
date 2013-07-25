@@ -1,0 +1,19 @@
+Config { 
+  font = "xft:Ubuntu Sans:size=11:antialias=true"
+, bgColor = "#3c3b37"
+, fgColor = "#dfdbd2"
+, position = BottomW L 50
+, lowerOnStart = True
+, sepChar = "%"
+, alignSep = "}{"
+, template = "%battery% %StdinReader%}{"
+, commands = [ Run StdinReader 
+             , Run Battery [ "-t", "<acstatus> <left>% (<timeleft>)"
+                           , "--"
+                           , "-o", ""
+                           , "-O", "Charging"
+                           , "-c", "energy_full"
+                           ] 50 
+
+             ]
+}

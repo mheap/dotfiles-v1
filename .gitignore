@@ -3,3 +3,6 @@ vim/.vim.symlink/.netrwhist
 vim/.vim.symlink/tmp
 i3/.i3.symlink/config.save
 machine-specific/mike
+xmonad/.xmonad.symlink/xmonad.errors
+xmonad/.xmonad.symlink/xmonad.hi
+xmonad/.xmonad.symlink/xmonad.o

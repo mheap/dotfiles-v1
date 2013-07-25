@@ -1,0 +1,16 @@
+Config { 
+  font = "xft:Ubuntu Sans:size=11:bold:antialias=true"
+, bgColor = "#3c3b37"
+, fgColor = "#dfdbd2"
+, position = Top
+, lowerOnStart = True
+, commands = [ Run Weather "EGLL" ["-t","<skyCondition> <tempC>°C","-L","12","-H","25","--high","red","--low","lightblue"] 36000
+             , Run MultiCpu ["-t","CPU: <total>%","-L","3","-H","50","--high","red"] 100
+             , Run Memory ["-t","Mem: <usedratio>%"] 100
+             , Run Date "%a %_d %b %Y %H:%M" "date" 10
+             , Run StdinReader
+             ]
+, sepChar = "%"
+, alignSep = "}{"
+, template = " %multicpu% | %memory% }%StdinReader%{ %EGLL%  %date% "
+}

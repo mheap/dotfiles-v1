@@ -1,0 +1,12 @@
+Config { 
+  font = "xft:Ubuntu Sans:size=11:antialias=true"
+, bgColor = "#3c3b37"
+, fgColor = "#dfdbd2"
+, position = BottomW R 50
+, lowerOnStart = True
+, commands = [ Run StdinReader
+             ]
+, sepChar = "%"
+, alignSep = "}{"
+, template = "}{%StdinReader% "
+}
