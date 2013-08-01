@@ -68,8 +68,8 @@ imap <right> <nop>
 """"""""""""""""""""""""""""""
 
 " Left/Right changes buffer
-nnoremap <left> :bp<CR>
-nnoremap <right> :bn<CR>
+nnoremap <left> :tabp<CR>
+nnoremap <right> :tabn<CR>
 
 " Easy window navigation
 map <C-h> <C-w>h
@@ -303,27 +303,20 @@ let g:ctrlp_custom_ignore = {
 """"" NERDTree.vim
 nnoremap <leader>d :NERDTreeToggle<cr>
 
-""""" LustyJuggler.vim
-nnoremap <leader>b :LustyJuggler<cr>
-
-""""" tagbar.vim
-nnoremap <leader>l :TagbarToggle<CR>
-
-""""" fugitive.vim
-nnoremap <leader>gd :Gdiff<cr>
-nnoremap <leader>gs :Gstatus<cr>
-nnoremap <leader>gw :Gwrite<cr>
-nnoremap <leader>ga :Gadd<cr>
-nnoremap <leader>gb :Gblame<cr>
-nnoremap <leader>gco :Gcheckout<cr>
-nnoremap <leader>gci :Gcommit<cr>
-nnoremap <leader>gm :Gmove<cr>
-nnoremap <leader>gr :Gremove<cr>
-
 """"" bufkill.vim
 " <leader>c closes the buffer, but not the split
 nnoremap <leader>c :BD<CR>
 
+""""" ctrlp.vim
+let g:ctrlp_prompt_mappings = {
+  \ 'AcceptSelection("e")': [],
+  \ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
+  \ }
 
-au! BufNewFile,BufRead *.twig set filetype=javascript
-au! BufNewFile,BufRead *.swig set filetype=javascript
+""""" syntastic.vim
+let g:syntastic_php_checkers=['php']
+
+""""" Twig and Swig are HTML
+au! BufNewFile,BufRead *.twig set filetype=html
+au! BufNewFile,BufRead *.swig set filetype=html
+

@@ -55,4 +55,3 @@ fi
 
 # Update path to point to $ZSH/bin
 PATH=$ZSH/bin:$PATH
-eval "$(rbenv init -)"
