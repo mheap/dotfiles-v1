@@ -7,7 +7,6 @@ function prompt_char {
 }
 
 function git_branch {
-    return;
     BRANCH="$(git symbolic-ref HEAD 2>/dev/null | cut -d'/' -f3,4,5)"
     if ! test -z $BRANCH; then
         COL="%{$fg[green]%}" # Everything's fine
