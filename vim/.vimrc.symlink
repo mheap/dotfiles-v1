@@ -1,4 +1,3 @@
-
 set nocompatible               " be iMproved
 filetype off                   " required!
 
@@ -156,8 +155,8 @@ set wildignore+=*.zip,*.rar                      " Ignore archive files
 set hidden
 
 " Tabs = 4 spaces
-"set tabstop=4 shiftwidth=4 expandtab softtabstop=4
-set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
+set tabstop=4 shiftwidth=4 expandtab softtabstop=4
+"set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
 " Show current line
 set cursorline
@@ -263,11 +262,6 @@ nnoremap <silent> <leader>F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>
 " This is a cheat, but it's useful. Enable <cr> in normal mode
 nnoremap <silent> <CR> :put=''<CR>
 
-" Use <space> to toggle folds
-nnoremap <Space> za
-vnoremap <Space> za
-set nofoldenable
-
 " Make U do the opposite of u (aka redo)
 nnoremap U <C-r>
 
@@ -320,3 +314,13 @@ let g:syntastic_php_checkers=['php']
 au! BufNewFile,BufRead *.twig set filetype=html
 au! BufNewFile,BufRead *.swig set filetype=html
 
+""""" PHPDocumenter
+nnoremap <Space> :call PhpDocSingle()<CR>
+
+" Default values
+let g:pdv_cfg_Type = "mixed"
+let g:pdv_cfg_Package = "Foo"
+let g:pdv_cfg_Author = "Michael Heap <michael.heap@datasift.com>"
+let g:pdv_cfg_Copyright = "2013 Mediasift Ltd."
+
+nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>

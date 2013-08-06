@@ -5,6 +5,7 @@ dropbox start &
 nm-applet &
 xsetroot -cursor_name left_ptr  
 setxkbmap -layout uk
+dconf write /org/gnome/settings-daemon/plugins/xrandr/active false
 gnome-settings-daemon &
 feh --bg-fill ~/Documents/current-wallpaper.png
 exec ck-launch-session dbus-launch xmonad
