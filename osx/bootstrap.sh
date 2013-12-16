@@ -27,6 +27,9 @@ brew install mysql
 # We need ctags for vim
 brew install ctags
 
+# Also ag for bim
+brew install the_silver_searcher
+
 # Coreutils!
 brew install coreutils
 

@@ -8,7 +8,7 @@ if [ "`uname`" = "Darwin" ]; then
 fi
 
 BREW_INSTALLED=0
-if [ "`which brew`" != "brew not found" ]; then
+if $(brew &>/dev/null); then
     BREW_INSTALLED=1
 fi
 
