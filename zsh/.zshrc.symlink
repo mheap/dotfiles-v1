@@ -53,5 +53,9 @@ if [[ -a ~/.localrc ]]; then
   source ~/.localrc
 fi
 
-# Update path to point to $ZSH/bin
-PATH=$ZSH/bin:$PATH
+# Update path to point to ~/bin and $ZSH/bin
+PATH=~/bin:$ZSH/bin:$PATH
+
+1p(){
+  open "http://localhost:8000/1Password.html" &; python -m SimpleHTTPServer
+}
