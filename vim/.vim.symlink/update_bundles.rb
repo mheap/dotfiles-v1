@@ -23,6 +23,9 @@ git_bundles = [
     "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
     "git://github.com/airblade/vim-rooter.git", # Set working dir based on parent .git dir
     "git://github.com/vim-scripts/IndexedSearch.git", # Show search N out of M message
+    "git://github.com/garbas/vim-snipmate.git", # Snipmate!
+    "git@github.com:tomtom/tlib_vim.git", # Needed for Snipmate
+    "git@github.com:MarcWeber/vim-addon-mw-utils.git", # Also needed for Snipmate
 
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
