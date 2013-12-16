@@ -10,17 +10,19 @@ alias l="$LS_COM -lAh --color"
 alias ll="$LS_COM -l --color"
 alias la='$LS_COM -A --color'
 
-alias colourify="grc -es --colour=auto"
-alias configure='colourify ./configure'
-alias diff='colourify diff'
-alias make='colourify make'
-alias gcc='colourify gcc'
-alias g++='colourify g++'
-alias as='colourify as'
-alias gas='colourify gas'
-alias netstat='colourify netstat'
-alias ping='colourify ping'
-alias curl='colourify curl'
+if $(grc &>/dev/null); then
+  alias colourify="grc -es --colour=auto"
+  alias configure='colourify ./configure'
+  alias diff='colourify diff'
+  alias make='colourify make'
+  alias gcc='colourify gcc'
+  alias g++='colourify g++'
+  alias as='colourify as'
+  alias gas='colourify gas'
+  alias netstat='colourify netstat'
+  alias ping='colourify ping'
+  alias curl='colourify curl'
+fi
 
 # From http://dotfiles.org/~_why/.zshrc
 # Sets the window title nicely no matter where you are
@@ -43,7 +45,7 @@ function title() {
 
 
 # Set the current tab's title
-title () {
+title2 () {
     echo -ne "\033]0;$@\007"
 }
 

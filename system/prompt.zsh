@@ -16,20 +16,13 @@ function git_branch {
     fi
 }
 
-function battery_stats {
-    [[ $IS_OSX -eq 0 ]] && return # If we're not on OSX
-    BATT_PERCENT="`pmset -g batt | grep Internal | awk '{print $2}' | sed 's/;//'`%"
-    [ $BATT_PERCENT = "100%%" ] && BATT_PERCENT=""
-    echo $BATT_PERCENT
-}
-
 function precmd() {
     NAME=""
     if [[ $(whoami) != "michael" ]]; then; NAME="%n%{$reset_color%}@"; fi;
 
     PROMPT="%{$fg[red]%}$NAME%{$fg[green]%}%m %{$fg[yellow]%}%~ %{$reset_color%}% 
 $(prompt_char) "
-    RPROMPT="$(git_branch)%{$reset_color%}%  $(battery_stats)"
+    RPROMPT="$(git_branch)%{$reset_color%}%"
 
     title $(pwd | sed -e "s,^$HOME,~,")
 }
