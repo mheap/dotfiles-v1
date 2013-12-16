@@ -14,27 +14,29 @@ if exists("g:loaded_syntastic_ruby_jruby_checker")
 endif
 let g:loaded_syntastic_ruby_jruby_checker=1
 
-function! SyntaxCheckers_ruby_jruby_IsAvailable()
-    return executable('jruby')
-endfunction
+function! SyntaxCheckers_ruby_jruby_GetLocList() dict
+    if syntastic#util#isRunningWindows()
+        let exe = self.getExec()
+        let args = '-W1 -T1 -c'
+    else
+        let exe = 'RUBYOPT= ' . self.getExec()
+        let args = '-W1 -c'
+    endif
 
-function! SyntaxCheckers_ruby_jruby_GetLocList()
-    let makeprg = syntastic#makeprg#build({
-                \ 'exe': s:exe(),
-                \ 'args': s:args(),
-                \ 'subchecker': 'jruby' })
+    let makeprg = self.makeprgBuild({ 'exe': exe, 'args': args })
 
-    let errorformat =  '%-GSyntax OK for %f,%ESyntaxError in %f:%l: syntax error\, %m,%Z%p^,%W%f:%l: warning: %m,%Z%p^,%W%f:%l: %m,%-C%.%#'
+    let errorformat =
+        \ '%-GSyntax OK for %f,'.
+        \ '%ESyntaxError in %f:%l: syntax error\, %m,'.
+        \ '%Z%p^,'.
+        \ '%W%f:%l: warning: %m,'.
+        \ '%Z%p^,'.
+        \ '%W%f:%l: %m,'.
+        \ '%-C%.%#'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
-endfunction
-
-function s:args()
-    return has('win32') ? '-W1 -T1 -c' : '-W1 -c'
-endfunction
-
-function s:exe()
-    return has('win32') ? 'jruby' : 'RUBYOPT= jruby'
+    return SyntasticMake({
+        \ 'makeprg': makeprg,
+        \ 'errorformat': errorformat })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({

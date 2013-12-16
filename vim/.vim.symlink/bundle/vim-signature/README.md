@@ -25,11 +25,10 @@ Requires Vim to be compiled with +signs to display marks.
 
 
 ## Installation
-I highly recommend using Pathogen or Vundler to do the grunt work for you.  
-If for some reason, you do not want to use any of these excellent plugins,  
-then unzip it to your ~/.vim directory. You know how it goes...  
+I recommend using a plugin manager to do the grunt work for you.  
+If for some reason, you do not want to use any of them, then unzip the contents of the .zip file to your ~/.vim directory.  
 
-Once that's done, out of the box, the followings mappings are defined by default  
+Once that's done, out of the box, the followings mappings are defined  
 
 ````
   m[a-zA-Z]    : Toggle mark
@@ -61,7 +60,7 @@ Note that this does not delete any of the marks but only hides them.
 This is a buffer-specific command.
 
 If for some reason, the marks and their sign displays go out of sync,
-use `:SignatureRefreshDisplay` to... well, refresh the display.
+use `:SignatureRefresh` to refresh them.
 
 For more details on customization refer the help
 
@@ -72,6 +71,5 @@ For more details on customization refer the help
 
 
 ## ToDo:
-* Add custom color support for signs
 * Add support for non-Alphabetical marks
 * Tie the Signature functions to vim commands that affect mark placement
