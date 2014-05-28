@@ -12,7 +12,6 @@ Config {
                            , "--"
                            , "-o", ""
                            , "-O", "Charging"
-                           , "-c", "energy_full"
                            ] 50 
 
              ]

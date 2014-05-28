@@ -54,8 +54,10 @@ if [[ -a ~/.localrc ]]; then
 fi
 
 # Update path to point to ~/bin and $ZSH/bin
-PATH=~/bin:$ZSH/bin:$PATH
+PATH=~/bin:$ZSH/bin:/home/michael/.composer/vendor/bin:$PATH
 
 1p(){
   open "http://localhost:8000/1Password.html" &; python -m SimpleHTTPServer
 }
+
+export DISABLE_AUTO_TITLE=true

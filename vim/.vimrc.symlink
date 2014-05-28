@@ -28,8 +28,9 @@ let mapleader=","
 "" How it looks + feels
 """"""""""""""""""""""""""""""
 
-" Solarized colours
-syntax enable
+syntax on
+
+" Solarized colours syntax enable
 set background=dark
 colorscheme solarized
 
@@ -42,6 +43,8 @@ set mouse=a
 " Remove intro message
 set shortmess=atI
 
+" Make backspace behave
+set backspace=indent,eol,start
 
 """"""""""""""""""""""""""""""
 "" General Mappings
@@ -70,18 +73,19 @@ imap <right> <nop>
 nnoremap <left> :tabp<CR>
 nnoremap <right> :tabn<CR>
 
+
 " Easy window navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+"map <C-h> <C-w>h
+"map <C-j> <C-w>j
+"map <C-k> <C-w>k
+"map <C-l> <C-w>l
 
 """"""""""""""""""""""""""""""
 "" F-Keys Mappings
 """"""""""""""""""""""""""""""
 
 " Reindent!
-map <F7> mzgg=G`z
+map <F7> mzgg=G`zmz
 
 """"""""""""""""""""""""""""""
 "" Command bar config
@@ -286,7 +290,7 @@ endfunction
 " Ignore vendor (composer), node_modules (npm) and any VCS folders.
 " Don't forget to run :ClearAllCtrlPCaches when changing this
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](node_modules|\.(git|hg|svn))$',
+  \ 'dir':  'vendor\|node_modules\|\.(git|hg|svn)$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ }
 
@@ -297,7 +301,7 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -U -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
   " set up Ack.vim to actually use ag
   let g:ackprg = 'ag --nogroup --nocolor --column'
@@ -324,7 +328,10 @@ let g:ctrlp_prompt_mappings = {
   \ }
 
 """"" syntastic.vim
+let g:syntastic_check_on_open=1
 let g:syntastic_php_checkers=['php']
+let g:syntastic_python_checkers=['flake8']
+
 
 """"" Twig and Swig are HTML
 au! BufNewFile,BufRead *.twig set filetype=html
@@ -338,5 +345,3 @@ let g:pdv_cfg_Type = "mixed"
 let g:pdv_cfg_Package = "Foo"
 let g:pdv_cfg_Author = "Michael Heap <michael.heap@datasift.com>"
 let g:pdv_cfg_Copyright = "2013 Mediasift Ltd."
-
-nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>

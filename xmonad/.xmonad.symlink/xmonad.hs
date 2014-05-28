@@ -127,7 +127,7 @@ main = do
         , ((mod4Mask .|. shiftMask   , xK_space)      , promote)
         , ((mod4Mask .|. shiftMask   , xK_q)          , kill)
         , ((ctrlMask .|. altMask     , xK_q)          , io (exitWith ExitSuccess)) -- Ctrl + Alt + q = Quit xmonad
-        , ((ctrlMask .|. altMask     , xK_l)          , spawn "i3lock -c 111111") -- Ctrl + Alt + L = Lock screen
+        , ((ctrlMask .|. shiftMask     , xK_l)          , spawn "i3lock -c 111111") -- Ctrl + Alt + L = Lock screen
         , ((0                        , xK_Print)      , spawn "scrot") -- PrintScreen = Take screenshot
         , ((mod4Mask                 , xK_p)          , spawn "dmenu_run")
         ]

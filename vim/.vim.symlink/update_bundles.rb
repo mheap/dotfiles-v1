@@ -9,7 +9,6 @@ git_bundles = [
     ## Plugins
     "git://github.com/Lokaltog/vim-easymotion.git", # Quick navigation inside a buffer
     "git://github.com/myusuf3/numbers.vim.git", # Relative line numbers in normal mode
-    "git://github.com/scrooloose/nerdtree.git", # Tree file viewer
     "git://github.com/kien/ctrlp.vim.git", # Fuzzy matching file opener
     "git://github.com/Raimondi/delimitMate.git", # Smart quote/parethesis closing
     "git://github.com/docunext/closetag.vim.git", # Auto close HTML tags
@@ -23,6 +22,7 @@ git_bundles = [
     "git://github.com/kshenoy/vim-signature.git", # Show marks on screen
     "git://github.com/airblade/vim-rooter.git", # Set working dir based on parent .git dir
     "git://github.com/vim-scripts/IndexedSearch.git", # Show search N out of M message
+
     "git://github.com/garbas/vim-snipmate.git", # Snipmate!
     "git@github.com:tomtom/tlib_vim.git", # Needed for Snipmate
     "git@github.com:MarcWeber/vim-addon-mw-utils.git", # Also needed for Snipmate
@@ -30,8 +30,7 @@ git_bundles = [
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
     "git://github.com/pangloss/vim-javascript.git", # Better Javascript indentation
-    "git://github.com/vim-scripts/Better-CSS-Syntax-for-Vim.git", # Better CSS3 highlighting
-    "git://github.com/skammer/vim-css-color.git" # Show CSS colours in vim
+    "git://github.com/vim-scripts/Better-CSS-Syntax-for-Vim.git" # Better CSS3 highlighting
 ]
 
 require 'fileutils'
