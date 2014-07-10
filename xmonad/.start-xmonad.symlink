@@ -1,5 +1,5 @@
 #!/bin/bash
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+#/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 trayer --edge bottom --width 20 --height 22 --transparent true --tint 0x3c3b37 --alpha 0 &
 dropbox start &
 nm-applet &
@@ -8,5 +8,6 @@ setxkbmap -layout uk
 dconf write /org/gnome/settings-daemon/plugins/xrandr/active false
 gnome-settings-daemon &
 feh --bg-fill ~/Documents/current-wallpaper.png
+xcompmgr -n &
 #exec ck-launch-session dbus-launch xmonad
 xmonad
