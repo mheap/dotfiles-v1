@@ -3,6 +3,9 @@ import XMonad.Actions.WorkspaceNames -- workspaceNamesPP
 import XMonad.Actions.Promote
 
 
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.EwmhDesktops
+
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -141,7 +144,7 @@ myWorkspaces = map show [1..12]
 
 myBindings =
     [ ("M-<Return>"     , spawn "gnome-terminal")
-    , ("M-S-<Return>"   , spawn "google-chrome")
+    , ("M-S-<Return>"   , spawn "google-chrome --ssl-version-min=tls1")
     , ("M-S-q"          , kill)
     , ("M-S-<Space>"    , promote)
     , ("C-M1-q"         , io (exitWith ExitSuccess)) -- Ctrl + Alt + q = Quit xmonad
@@ -150,14 +153,28 @@ myBindings =
     , ("M-p"            , spawn "dmenu_run")
     , ("M-,"            , sendMessage (IncMasterN 1))
     , ("M-."            , sendMessage (IncMasterN (-1)))
+    , ("<XF86AudioMute>"  , spawn "amixer -q -D pulse sset Master toggle")
+    , ("<XF86AudioRaiseVolume>"  , spawn "amixer -q -D pulse sset Master 10%+ unmute")
+    , ("<XF86AudioLowerVolume>"  , spawn "amixer -q -D pulse sset Master 10%- unmute")
+    , ("<XF86AudioPlay>"  , spawn "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
     ]
+    -- Make F-keys switch workspaces too
     ++
     [ (otherModMasks ++ "M-" ++ key, action tag)
         | (tag, key)  <- zip myWorkspaces (map (\x -> "<F" ++ x ++ ">") myWorkspaces)
         , (otherModMasks, action) <- [ ("", windows . W.view) -- or W.greedyView
                                      , ("S-", windows . W.shift)]
     ]
+    -- Make Mod+<num> behave the same as the F-keys
+    ++
+    [ (otherModMasks ++ "M-" ++ [key], action tag)
+      | (tag, key)  <- zip myWorkspaces "123456789"
+      , (otherModMasks, action) <- [ ("", windows . W.view)
+                                      , ("S-", windows . W.shift)]
+    ]
 
+
+myStartupHook = setWMName "LG3D"
 
 --
 -- Actually run xmonad
@@ -184,6 +201,8 @@ main = do
                         dynamicLogWithPP ttlPP >>
                         dynamicLogWithPP lytPP >>
                         logHook myConfig
+        , startupHook = myStartupHook
+        , handleEventHook = ewmhDesktopsEventHook
 
         -- Set up additional bindings
         } `additionalKeysP` myBindings

@@ -13,4 +13,7 @@ Config {
 , sepChar = "%"
 , alignSep = "}{"
 , template = " %multicpu% | %memory% }%StdinReader%{ %EGLL%  %date% "
+, hideOnStart = False
+, allDesktops = True
+, persistent  = True
 }

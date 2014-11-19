@@ -17,6 +17,7 @@
         count   = !git shortlog -sn
 	lg = !git log --graph --pretty=oneline --abbrev-commit --decorate
 	ci = !$ZSH/bin/git-ci
+	whoami = !$ZSH/bin/git-whoami
 	conflicts = !$ZSH/bin/git-conflicts
 
 [color]
@@ -43,3 +44,6 @@
   insteadOf = "git://github.com/mheap/"
 [push]
 	default = simple
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/

@@ -1,7 +1,6 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-
 call pathogen#infect()
 
 " Set smart indenting
@@ -70,15 +69,17 @@ imap <right> <nop>
 """"""""""""""""""""""""""""""
 
 " Left/Right changes buffer
-nnoremap <left> :tabp<CR>
-nnoremap <right> :tabn<CR>
+nnoremap <left> :bp<CR>
+nnoremap <right> :bn<CR>
+nnoremap <S-h> <C-w>h<C-w>h<C-w>h<C-w>h
+nnoremap <S-l> <C-w>l<C-w>l<C-w>l<C-w>l
 
 
 " Easy window navigation
-"map <C-h> <C-w>h
-"map <C-j> <C-w>j
-"map <C-k> <C-w>k
-"map <C-l> <C-w>l
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 """"""""""""""""""""""""""""""
 "" F-Keys Mappings
@@ -269,6 +270,7 @@ nnoremap <silent> <CR> :put=''<CR>
 " Make U do the opposite of u (aka redo)
 nnoremap U <C-r>
 
+
 " Underline all the things!
 noremap <leader>- YpVr-
 noremap <leader>= YpVr=
@@ -322,10 +324,11 @@ nnoremap <leader>d :NERDTreeToggle<cr>
 nnoremap <leader>c :BD<CR>
 
 """"" ctrlp.vim
-let g:ctrlp_prompt_mappings = {
-  \ 'AcceptSelection("e")': [],
-  \ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
-  \ }
+nmap <C-o> :CtrlPBuffer<CR>
+"let g:ctrlp_prompt_mappings = {
+"  \ 'AcceptSelection("e")': [],
+"  \ 'AcceptSelection("t")': ['<cr>', '<c-m>'],
+"  \ }
 
 """"" syntastic.vim
 let g:syntastic_check_on_open=1
@@ -337,6 +340,9 @@ let g:syntastic_python_checkers=['flake8']
 au! BufNewFile,BufRead *.twig set filetype=html
 au! BufNewFile,BufRead *.swig set filetype=html
 
+""""" Tagbar
+nmap <F8> :TagbarToggle<CR>
+
 """"" PHPDocumenter
 nnoremap <Space> :call PhpDocSingle()<CR>
 
@@ -344,4 +350,4 @@ nnoremap <Space> :call PhpDocSingle()<CR>
 let g:pdv_cfg_Type = "mixed"
 let g:pdv_cfg_Package = "Foo"
 let g:pdv_cfg_Author = "Michael Heap <michael.heap@datasift.com>"
-let g:pdv_cfg_Copyright = "2013 Mediasift Ltd."
+let g:pdv_cfg_Copyright = "2014 Mediasift Ltd."

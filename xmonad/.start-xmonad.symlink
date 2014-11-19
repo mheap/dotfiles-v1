@@ -1,13 +1,11 @@
 #!/bin/bash
 #/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-trayer --edge bottom --width 20 --height 22 --transparent true --tint 0x3c3b37 --alpha 0 &
+bash ~/.screenlayout/work-desk.sh
+trayer --edge bottom --width 20 --height 22 --transparent true --tint 0x3c3b37 --alpha 0 --monitor 1 &
 dropbox start &
 nm-applet &
 xsetroot -cursor_name left_ptr  
-setxkbmap -layout uk
-dconf write /org/gnome/settings-daemon/plugins/xrandr/active false
-gnome-settings-daemon &
+setxkbmap -layout gb
 feh --bg-fill ~/Documents/current-wallpaper.png
 xcompmgr -n &
-#exec ck-launch-session dbus-launch xmonad
 xmonad

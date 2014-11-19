@@ -57,7 +57,7 @@ fi
 PATH=~/bin:$ZSH/bin:/home/michael/.composer/vendor/bin:$PATH
 
 1p(){
-  open "http://localhost:8000/1Password.html" &; python -m SimpleHTTPServer
+  open "http://localhost:8000/1Password.html" &; php -S localhost:8000 -t ~/Dropbox/1Password.agilekeychain
 }
 
 export DISABLE_AUTO_TITLE=true
