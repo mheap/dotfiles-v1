@@ -18,12 +18,19 @@
 if exists("g:loaded_syntastic_css_prettycss_checker")
     finish
 endif
-let g:loaded_syntastic_css_prettycss_checker=1
+let g:loaded_syntastic_css_prettycss_checker = 1
+
+if !exists('g:syntastic_css_prettycss_sort')
+    let g:syntastic_css_prettycss_sort = 1
+endif
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! SyntaxCheckers_css_prettycss_GetHighlightRegex(item)
     let term = matchstr(a:item["text"], '\m (\zs[^)]\+\ze)$')
     if term != ''
-        let term = '\V' . term
+        let term = '\V' . escape(term, '\')
     endif
     return term
 endfunction
@@ -40,8 +47,7 @@ function! SyntaxCheckers_css_prettycss_GetLocList() dict
     let loclist = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
-        \ 'defaults': {'bufnr': bufnr("")},
-        \ 'postprocess': ['sort'] })
+        \ 'defaults': {'bufnr': bufnr("")} })
 
     for e in loclist
         let e["text"] .= ')'
@@ -53,3 +59,8 @@ endfunction
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'css',
     \ 'name': 'prettycss'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

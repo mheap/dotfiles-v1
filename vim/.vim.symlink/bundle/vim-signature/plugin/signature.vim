@@ -4,127 +4,130 @@
 " Kartik Shenoy
 "
 " vim: fdm=marker:et:ts=4:sw=2:sts=2
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Exit when app has already been loaded (or "compatible" mode set)
-if exists("g:loaded_Signature") || &cp
+" Exit if the signs feature is not available or if the app has already been loaded (or "compatible" mode set)
+if !has('signs') || &cp
   finish
 endif
-let g:loaded_Signature = "2"
+if exists("g:loaded_Signature")
+  finish
+endif
+let g:loaded_Signature = "3"
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" Global variables           {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" Global variables                                                                                                 {{{1
 "
-if !exists('g:SignatureEnableDefaultMappings')
-  let g:SignatureEnableDefaultMappings = 1
-endif
-if !exists('g:SignatureIncludeMarks')
-  let g:SignatureIncludeMarks = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-endif
-if !exists('g:SignatureIncludeMarkers')
-  let g:SignatureIncludeMarkers = ")!@#$%^&*("
-endif
-if !exists('g:SignatureMarkTextHL')
-  let g:SignatureMarkTextHL = "Exception"
-endif
-if !exists('g:SignatureMarkerTextHL')
-  let g:SignatureMarkerTextHL = "WarningMsg"
-endif
-if !exists('g:SignaturePrioritizeMarks')
-  let g:SignaturePrioritizeMarks = 1
-endif
-if !exists('g:SignatureWrapJumps')
-  let g:SignatureWrapJumps = 1
-endif
-if !exists('g:SignatureLeader')
-  let g:SignatureLeader = "m"
-endif
-if !exists('g:SignatureMarkOrder')
-  let g:SignatureMarkOrder = "\p\m"
-endif
-if !exists('g:SignaturePurgeConfirmation')
-  let g:SignaturePurgeConfirmation = 0
-endif
-if !exists('g:SignatureMenu')
-  let g:SignatureMenu = 'P&lugin.&Signature'
-endif
-if !exists('g:SignaturePeriodicRefresh')
-  let g:SignaturePeriodicRefresh = 1
-endif
-" }}}1
+call signature#utils#Set('g:SignaturePrioritizeMarks',             1                                                     )
+call signature#utils#Set('g:SignatureIncludeMarks',                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+call signature#utils#Set('g:SignatureIncludeMarkers',              ')!@#$%^&*('                                          )
+call signature#utils#Set('g:SignatureMarkTextHL',                  '"Exception"'                                         )
+call signature#utils#Set('g:SignatureMarkLineHL',                  '""'                                                  )
+call signature#utils#Set('g:SignatureMarkerTextHL',                '"WarningMsg"'                                        )
+call signature#utils#Set('g:SignatureWrapJumps',                   1                                                     )
+call signature#utils#Set('g:SignatureMarkOrder',                   "\p\m"                                                )
+call signature#utils#Set('g:SignatureDeleteConfirmation',          0                                                     )
+call signature#utils#Set('g:SignaturePurgeConfirmation',           0                                                     )
+call signature#utils#Set('g:SignaturePeriodicRefresh',             1                                                     )
+call signature#utils#Set('g:SignatureEnabledAtStartup',            1                                                     )
+call signature#utils#Set('g:SignatureDeferPlacement',              1                                                     )
+call signature#utils#Set('g:SignatureUnconditionallyRecycleMarks', 0                                                     )
+call signature#utils#Set('g:SignatureErrorIfNoAvailableMarks',     1                                                     )
+call signature#utils#Set('g:SignatureForceRemoveGlobal',           1                                                     )
+call signature#utils#Set('g:SignatureForceMarkPlacement',          0                                                     )
+call signature#utils#Set('g:SignatureForceMarkerPlacement',        0                                                     )
+call signature#utils#Set('g:SignatureMap',                         {}                                                    )
 
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" Commands and autocmds      {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" Commands, Autocmds and Maps                                                                                      {{{1
 "
+call signature#utils#CreateMaps()
+
 if has('autocmd')
   augroup sig_autocmds
     autocmd!
-    autocmd BufEnter   * call signature#SignRefresh()
-    autocmd CursorHold * if g:SignaturePeriodicRefresh | call signature#SignRefresh() | endif
-    " Create maps only if we aren't entering a NERDTree pane
-    " We can't use &ft for condition checking as filetype still hasn't been set
-    autocmd FileType *
-      \ if expand('<amatch>') !=? "nerdtree" |
-      \   call signature#BufferMaps( g:SignatureEnableDefaultMappings ) |
-      \ endif
+    autocmd BufEnter,CmdwinEnter * call signature#sign#Refresh()
+    autocmd CursorHold * if g:SignaturePeriodicRefresh | call signature#sign#Refresh() | endif
   augroup END
 endif
 
-command! -nargs=0 SignatureToggle  call signature#Toggle()
-command! -nargs=0 SignatureRefresh call signature#SignRefresh(1)
-" }}}1
+command! -nargs=0 SignatureToggleSigns call signature#Toggle()
+command! -nargs=0 SignatureRefresh     call signature#sign#Refresh('force')
+command! -nargs=0 SignatureListMarks   call signature#mark#List('buf_curr')
+command! -nargs=? SignatureListMarkers call signature#marker#List(<args>)
 
 
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" Create Menu                {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" Misc                                                                                                             {{{1
 "
-if ( g:SignatureMenu != 0 ) && has('gui_running')
-  exec 'menu  <silent> ' . g:SignatureMenu . '.Pl&ace\ next\ mark<Tab>' . g:SignatureLeader . ', :call signature#ToggleMark(",")<CR>'
-  exec 'menu  <silent> ' . g:SignatureMenu . '.Re&move\ all\ marks\ \ \ \ <Tab>' . g:SignatureLeader . '<Space> :call signature#PurgeMarks()<CR>'
+function! signature#Input()                                                                                       " {{{2
+  " Description: Grab input char
 
-  if hasmapto('<Plug>SIG_NextSpotByPos')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ &next\ mark\ (pos)<Tab>' . signature#MapKey('<Plug>SIG_NextSpotByPos', 'n') . ' :call signature#GotoMark("pos", "next", "spot")'
-  else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ &next\ mark\ (pos) :call signature#GotoMark("pos", "next", "spot")'
+  " Obtain input from user ...
+  let l:char = nr2char(getchar())
+
+  " ... if the input is not a number eg. '!' ==> Delete all '!' markers
+  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
+    return signature#marker#Purge(l:char)
   endif
 
-  if hasmapto('<Plug>SIG_PrevSpotByPos')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ p&rev\ mark\ (pos)<Tab>' . signature#MapKey('<Plug>SIG_PrevSpotByPos', 'n') . ' :call signature#GotoMark("pos", "prev", "spot")'
-  else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ p&rev\ mark\ (pos) :call signature#GotoMark("pos", "prev", "spot")'
+  " ... but if input is a number, convert it to corresponding marker before proceeding
+  if match( l:char, '\d' ) >= 0
+    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
   endif
 
-  if hasmapto('<Plug>SIG_NextSpotByAlpha')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ next\ mark\ (a&lpha)<Tab>' . signature#MapKey('<Plug>SIG_NextSpotByAlpha', 'n') . ' :call signature#GotoMark("alpha", "next", "spot")'
+  if stridx(b:SignatureIncludeMarkers, l:char) >= 0
+    return signature#marker#Toggle(l:char)
+  elseif stridx(b:SignatureIncludeMarks, l:char) >= 0
+    return signature#mark#Toggle(l:char)
   else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ next\ mark\ (a&lpha) :call signature#GotoMark("alpha", "next", "spot")'
+    " l:char is probably one of `'[]<>
+    execute 'normal! m' . l:char
   endif
+endfunction
 
-  if hasmapto('<Plug>SIG_PrevSpotByAlpha')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ prev\ mark\ (alp&ha)<Tab>' . signature#MapKey('<Plug>SIG_PrevSpotByAlpha', 'n') . ' :call signature#GotoMark("alpha", "prev", "spot")'
+
+function! signature#Toggle()                                                                                      " {{{2
+  " Description: Toggles and refreshes sign display in the buffer.
+
+  let b:sig_enabled = !b:sig_enabled
+
+  if b:sig_enabled
+    " Signature enabled ==> Refresh signs
+    call signature#sign#Refresh()
+
+    " Add signs for markers ...
+    for i in keys(b:sig_markers)
+      call signature#sign#Place(b:sig_markers[i], i)
+    endfor
   else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ prev\ mark\ (alp&ha)<Tab> :call signature#GotoMark("alpha", "prev", "spot")'
+    " Signature disabled ==> Remove signs
+    for l:lnum in keys(b:sig_markers)
+      call signature#sign#Unplace(l:lnum)
+    endfor
+    for l:lnum in keys(b:sig_marks)
+      call signature#sign#Unplace(l:lnum)
+    endfor
+    unlet b:sig_marks
   endif
+endfunction
 
-  exec 'amenu <silent> ' . g:SignatureMenu . '.-s1- :'
 
-  exec 'menu  <silent> ' . g:SignatureMenu . '.Rem&ove\ all\ markers<Tab>' . g:SignatureLeader . '<BS> :call signature#PurgeMarkers()<CR>'
+function! signature#Remove(lnum)                                                                                  " {{{2
+  " Description: Obtain mark or marker from the user and remove it from the specified line number.
+  "              If lnum is not specified for marker, or is 0, removes the marker from current line
+  "              NOTE: lnum is meaningless for a mark
+  " Arguments:   lnum - Line no. to delete the marker from
 
-  if hasmapto('<Plug>SIG_NextMarkerByType')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ nex&t\ marker<Tab>' . signature#MapKey('<Plug>SIG_NextMarkerByType', 'n') . ' :call signature#GotoMarker("next")'
-  else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ nex&t\ marker :call signature#GotoMarker("next")'
+  let l:char = nr2char(getchar())
+
+  if (l:char =~ '^\d$')
+    let l:lnum = (a:lnum == 0 ? line('.') : a:lnum)
+    let l:char = split(')!@#$%^&*(', '\zs')[l:char]
+    call signature#marker#Remove(lnum, l:char)
+  elseif (l:char =~? '^[a-z]$')
+    call signature#mark#Remove(l:char)
   endif
-
-  if hasmapto('<Plug>SIG_PrevMarkerByType')
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ pre&v\ marker<Tab>' . signature#MapKey('<Plug>SIG_PrevMarkerByType', 'n') . ' :call signature#GotoMarker("prev")'
-  else
-    exec 'menu  <silent> ' . g:SignatureMenu . '.Goto\ pre&v\ marker :call signature#GotoMarker("prev")'
-  endif
-endif
-" }}}1
-
-
-call signature#Init()
+endfunction

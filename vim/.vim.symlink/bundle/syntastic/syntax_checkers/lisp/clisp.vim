@@ -9,32 +9,49 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
+
 if exists("g:loaded_syntastic_lisp_clisp_checker")
     finish
 endif
-let g:loaded_syntastic_lisp_clisp_checker=1
+let g:loaded_syntastic_lisp_clisp_checker = 1
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! SyntaxCheckers_lisp_clisp_GetLocList() dict
+    let tmpdir = syntastic#util#tmpdir()
+    let out = tmpdir != '.' ? ('-o ' . syntastic#util#shescape(tmpdir . syntastic#util#Slash() . 'syntastic_' . getpid())) : ''
+
     let makeprg = self.makeprgBuild({
-        \ 'args': '-q -c',
-        \ 'tail': syntastic#c#NullOutput() })
+        \ 'args_after': '-q',
+        \ 'fname_before': '-c',
+        \ 'post_args_after': out })
 
     let errorformat  =
         \ '%-G;%.%#,' .
-        \ '%W%>WARNING:%.%#line %l : %m,' .
+        \ '%W%>WARNING:%.%# line %l : %m,' .
         \ '%Z  %#%m,' .
-        \ '%W%>WARNING:%.%#lines %l..%\d\# : %m,' .
+        \ '%W%>WARNING:%.%# lines %l%\%.%\%.%\d%\+ : %m,' .
         \ '%Z  %#%m,' .
         \ '%E%>The following functions were %m,' .
         \ '%Z %m,' .
         \ '%-G%.%#'
 
-    return SyntasticMake({
+    let loclist = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
         \ 'defaults': {'bufnr': bufnr('')} })
+
+    call syntastic#util#rmrf(tmpdir)
+
+    return loclist
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'lisp',
     \ 'name': 'clisp'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
+" vim: set et sts=4 sw=4:

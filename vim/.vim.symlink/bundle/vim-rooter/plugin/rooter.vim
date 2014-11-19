@@ -1,58 +1,7 @@
 " Vim plugin to change the working directory to the project root.
 "
-" The project root is identified by the presence of a directory,
-" such as a VCS directory, or a file, such as a Rakefile.  See
-" the Options section below for how to configure this.
-"
-" Copyright 2010 Andrew Stewart, <boss@airbladesoftware.com>
+" Copyright 2010-2014 Andrew Stewart, <boss@airbladesoftware.com>
 " Released under the MIT licence.
-"
-" This will happen automatically for typical Ruby webapp files.
-" If you don't want it to happen automatically, create the file
-" `.vim/after/plugin/vim-rooter.vim` with the single command:
-"
-"     autocmd! rooter
-"
-" You can invoke it manually with <Leader>cd (usually \cd).
-" To change the mapping, put this in your .vimrc:
-"
-"     map <silent> <unique> <Leader>foo <Plug>RooterChangeToRootDirectory
-"
-" ... where <Leader>foo is your preferred mapping.
-"
-" CONFIGURATION
-"
-"   g:rooter_patterns
-"
-"     This is an array of directories and files to look for.
-"     By default it is an array of common VCS directories.
-"     You can set your own patterns with something like:
-"
-"       let g:rooter_patterns = ['Rakefile', '.git/']
-"
-"     Note this overwrites the default patterns.
-"
-"
-"   g:rooter_user_lcd
-"
-"     This tells Vim to use `lcd` instead of `cd` (the default)
-"     when changing directory.  Set it like this:
-"
-"       let g:rooter_use_lcd = 1
-"
-"
-"   g:rooter_manual_only
-"
-"     Set this to stop vim-rooter changing directory automatically:
-"
-"       let g:rooter_manual_only = 1
-"
-"
-"   g:rooter_change_directory_for_non_project_files
-"
-"     Set this to change to a non-project file's directory.
-"     Defaults to off.
-
 
 if exists('g:loaded_rooter') || &cp
   finish
@@ -67,6 +16,10 @@ endif
 
 if !exists('g:rooter_patterns')
   let g:rooter_patterns = ['.git', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/']
+endif
+
+if !exists('g:rooter_autocmd_patterns')
+  let g:rooter_autocmd_patterns = '*'
 endif
 
 if !exists('g:rooter_change_directory_for_non_project_files')
@@ -157,6 +110,7 @@ endfunction
 
 if !hasmapto("<Plug>RooterChangeToRootDirectory")
   map <silent> <unique> <Leader>cd <Plug>RooterChangeToRootDirectory
+  sunmap <silent> <unique> <Leader>cd
 endif
 noremap <unique> <script> <Plug>RooterChangeToRootDirectory <SID>ChangeToRootDirectory
 noremap <SID>ChangeToRootDirectory :call <SID>ChangeToRootDirectory()<CR>
@@ -165,13 +119,7 @@ command! Rooter :call <SID>ChangeToRootDirectory()
 if !exists('g:rooter_manual_only')
   augroup rooter
     autocmd!
-    autocmd BufEnter *.rb,*.py,
-          \*.html,*.haml,*.erb,
-          \*.css,*.scss,*.sass,*.less,
-          \*.js,*.rjs,*.coffee,
-          \*.php,*.xml,*.yaml,*.yml,
-          \*.markdown,*.md
-          \ :Rooter
+    exe "autocmd BufEnter " . g:rooter_autocmd_patterns . " :Rooter"
   augroup END
 endif
 

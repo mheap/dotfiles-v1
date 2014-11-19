@@ -35,7 +35,7 @@ function! s:g(name, ...) "{{{
 	else
 		let name = 'delimitMate_' . a:name
 	endif
-	return eval(scope . ':' . name)
+	return deepcopy(eval(scope . ':' . name))
 endfunction "}}}
 
 function! s:exists(name, ...) "{{{
@@ -192,6 +192,27 @@ function! delimitMate#WithinEmptyPair() "{{{
 	return delimitMate#IsEmptyPair( char1.char2 )
 endfunction "}}}
 
+function! delimitMate#WithinEmptyMatchpair() "{{{
+	" get char before the cursor.
+	let open = delimitMate#GetCharFromCursor(-1)
+	let idx = index(s:g('left_delims'), open)
+	if idx == -1
+		return 0
+	endif
+	let close = get(s:g('right_delims'), idx, '')
+	return close ==# delimitMate#GetCharFromCursor(0)
+endfunction "}}}
+
+function! delimitMate#WithinEmptyQuotes() "{{{
+	" get char before the cursor.
+	let quote = delimitMate#GetCharFromCursor(-1)
+	let idx = index(s:g('quotes_list'), quote)
+	if idx == -1
+		return 0
+	endif
+	return quote ==# delimitMate#GetCharFromCursor(0)
+endfunction "}}}
+
 function! delimitMate#CursorIdx() "{{{
 	let idx = len(split(getline('.')[: col('.') - 1], '\zs')) - 1
 	return idx
@@ -331,16 +352,17 @@ function! delimitMate#ParenDelim(right) " {{{
 	endif
 	let line = getline('.')
 	let col = col('.')-2
-	let tail = len(line) == (col + 1) ? s:g('eol_marker') : ''
-	let smart_matchpairs = substitute(s:g('smart_matchpairs'), '\\!', left, 'g')
-	let smart_matchpairs = substitute(smart_matchpairs, '\\#', a:right, 'g')
-
-	if s:g('smart_matchpairs') != '' &&
-				\ line[col+1:] =~ smart_matchpairs
-		return left
-	"elseif (col) < 0
-	"	call setline('.',a:right.line)
+	if s:g('smart_matchpairs') != ''
+		let smart_matchpairs = substitute(s:g('smart_matchpairs'), '\\!', left, 'g')
+		let smart_matchpairs = substitute(smart_matchpairs, '\\#', a:right, 'g')
+		if line[col+1:] =~ smart_matchpairs
+			return left
+		endif
 	endif
+	let tail = len(line) == (col + 1) ? s:g('eol_marker') : ''
+	"if (col) < 0
+	"	call setline('.',a:right.line)
+	"endif
 	return left . a:right . tail . repeat("\<Left>", len(split(tail, '\zs')) + 1)
 endfunction " }}}
 
@@ -361,9 +383,9 @@ function! delimitMate#QuoteDelim(char) "{{{
 	elseif char_at == a:char
 		" Inside an empty pair, jump out
 		return a:char . "\<Del>"
-	elseif &ft == "vim" && a:char == '"' && getline('.') =~ '^\s*$'
+	elseif a:char == '"' && index(split(&ft, '\.'), "vim") != -1 && getline('.') =~ '^\s*$'
 		" If we are in a vim file and it looks like we're starting a comment, do
-		" not add a second
+		" not add a closing char.
 		return a:char
 	elseif delimitMate#IsSmartQuote(a:char)
 		" Seems like a smart quote, insert a single char.
@@ -392,7 +414,10 @@ function! delimitMate#JumpOut(char) "{{{
 	endif
 	let jump = delimitMate#ShouldJump(a:char)
 	if jump == 1
-		return "\<Right>"
+		" HACK: Instead of <Right>, we remove the char to be jumped over and
+		" insert it again. This will trigger re-indenting via 'indentkeys'.
+		" Ref: https://github.com/Raimondi/delimitMate/issues/168
+		return "\<Del>".a:char
 	elseif jump == 3
 		return "\<Right>\<Right>"
 	elseif jump == 5
@@ -448,10 +473,18 @@ function! delimitMate#ExpandReturn() "{{{
 	if delimitMate#IsForbidden("")
 		return "\<CR>"
 	endif
-	if delimitMate#WithinEmptyPair()
+	let escaped = delimitMate#CursorIdx() >= 2
+				\ && delimitMate#GetCharFromCursor(-2) == '\'
+	let expand_right_matchpair = s:g('expand_cr') == 2
+				\     && index(s:g('right_delims'), delimitMate#GetCharFromCursor(0)) > -1
+	let expand_inside_quotes = s:g('expand_inside_quotes')
+					\     && delimitMate#WithinEmptyQuotes()
+					\     && !escaped
+	if !pumvisible()
+				\ && (delimitMate#WithinEmptyMatchpair()
+				\     || expand_right_matchpair
+				\     || expand_inside_quotes)
 		" Expand:
-		" Not sure why I used the previous combos, but I'm sure somebody will
-		" tell me about it.
 		" XXX zv prevents breaking expansion with syntax folding enabled by
 		" InsertLeave.
 		return "\<Esc>a\<CR>\<Esc>zvO"
@@ -466,7 +499,10 @@ function! delimitMate#ExpandSpace() "{{{
 	endif
 	let escaped = delimitMate#CursorIdx() >= 2
 				\ && delimitMate#GetCharFromCursor(-2) == '\'
-	if delimitMate#WithinEmptyPair() && !escaped
+	let expand_inside_quotes = s:g('expand_inside_quotes')
+					\     && delimitMate#WithinEmptyQuotes()
+					\     && !escaped
+	if delimitMate#WithinEmptyMatchpair() || expand_inside_quotes
 		" Expand:
 		return "\<Space>\<Space>\<Left>"
 	else
