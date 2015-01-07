@@ -61,3 +61,7 @@ PATH=~/bin:$ZSH/bin:/home/michael/.composer/vendor/bin:$PATH
 }
 
 export DISABLE_AUTO_TITLE=true
+
+slack(){
+  cd ~/slack-4-linux/; ./slack &; disown; exit;
+}

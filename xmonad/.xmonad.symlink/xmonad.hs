@@ -154,8 +154,8 @@ myBindings =
     , ("M-,"            , sendMessage (IncMasterN 1))
     , ("M-."            , sendMessage (IncMasterN (-1)))
     , ("<XF86AudioMute>"  , spawn "amixer -q -D pulse sset Master toggle")
-    , ("<XF86AudioRaiseVolume>"  , spawn "amixer -q -D pulse sset Master 10%+ unmute")
-    , ("<XF86AudioLowerVolume>"  , spawn "amixer -q -D pulse sset Master 10%- unmute")
+    , ("<XF86AudioRaiseVolume>"  , spawn "amixer -q -D pulse sset Master 2000+ unmute")
+    , ("<XF86AudioLowerVolume>"  , spawn "amixer -q -D pulse sset Master 2000- unmute")
     , ("<XF86AudioPlay>"  , spawn "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause")
     ]
     -- Make F-keys switch workspaces too
