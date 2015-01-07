@@ -24,6 +24,7 @@ git_bundles = [
     "git://github.com/vim-scripts/IndexedSearch.git", # Show search N out of M message
     "git://github.com/majutsushi/tagbar.git", # Tagbar for ctags
     "git://github.com/fholgado/minibufexpl.vim.git", # MiniBufExplorer
+    "git://github.com/takac/vim-hardtime.git", # vim-hardtime (Disable jjjjj/kkkkk etc)
 
     "git://github.com/garbas/vim-snipmate.git", # Snipmate!
     "git://github.com/tomtom/tlib_vim.git", # Needed for Snipmate

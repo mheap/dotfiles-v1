@@ -351,3 +351,7 @@ let g:pdv_cfg_Type = "mixed"
 let g:pdv_cfg_Package = "Foo"
 let g:pdv_cfg_Author = "Michael Heap <michael.heap@datasift.com>"
 let g:pdv_cfg_Copyright = "2014 Mediasift Ltd."
+
+
+""""" vim-hardtime
+let g:hardtime_default_on = 1

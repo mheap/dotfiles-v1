@@ -9,9 +9,6 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "
 "============================================================================
-"
-" See here for details of phpcs
-"    - phpcs (see http://pear.php.net/package/PHP_CodeSniffer)
 
 if exists("g:loaded_syntastic_php_phpcs_checker")
     finish
@@ -43,4 +40,4 @@ call g:SyntasticRegistry.CreateAndRegisterChecker({
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:
