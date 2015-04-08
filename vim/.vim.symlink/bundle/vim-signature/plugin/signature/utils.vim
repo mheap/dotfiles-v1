@@ -8,8 +8,8 @@ function! signature#utils#Init()                                                
     " b:sig_marks = { lnum => signs_str }
     let b:sig_marks = {}
   else
-    " Lines can be removed using an external tool. Hence, we need to filter out marks placed on line numbers that are now
-    " greater than the total number of lines in the file.
+    " Lines can be removed using an external tool. Hence, we need to filter out marks placed on line numbers that are
+    " now greater than the total number of lines in the file.
     let l:line_tot = line('$')
     call filter( b:sig_marks, 'v:key <= l:line_tot' )
   endif
@@ -42,6 +42,7 @@ function! signature#utils#Set(var, default)                                     
       execute 'let' a:var '=' a:default
     endif
   endif
+  return a:var
 endfunction
 
 
@@ -70,25 +71,25 @@ function! signature#utils#Maps(mode)                                            
   if (s:SignatureMapLeader == "")
     echoe "Signature: g:SignatureMap.Leader shouldn't be left blank"
   endif
-  call s:Map(a:mode, 'Leader'           , s:SignatureMapLeader              , 'Input()'                           )
-  call s:Map(a:mode, 'PlaceNextMark'    , s:SignatureMapLeader . ","        , 'mark#Toggle("next")'               )
-  call s:Map(a:mode, 'ToggleMarkAtLine' , s:SignatureMapLeader . "."        , 'mark#ToggleAtLine()'               )
-  call s:Map(a:mode, 'PurgeMarksAtLine' , s:SignatureMapLeader . "-"        , 'mark#Purge("line")'                )
-  call s:Map(a:mode, 'PurgeMarks'       , s:SignatureMapLeader . "<Space>"  , 'mark#Purge("all")'                 )
-  call s:Map(a:mode, 'PurgeMarkers'     , s:SignatureMapLeader . "<BS>"     , 'marker#Purge()'                    )
-  call s:Map(a:mode, 'DeleteMark'       , "dm"                              , 'Remove(v:count)'                   )
-  call s:Map(a:mode, 'GotoNextLineAlpha', "']"                              , 'mark#Goto("next", "line", "alpha")')
-  call s:Map(a:mode, 'GotoPrevLineAlpha', "'["                              , 'mark#Goto("prev", "line", "alpha")')
-  call s:Map(a:mode, 'GotoNextSpotAlpha', "`]"                              , 'mark#Goto("next", "spot", "alpha")')
-  call s:Map(a:mode, 'GotoPrevSpotAlpha', "`["                              , 'mark#Goto("prev", "spot", "alpha")')
-  call s:Map(a:mode, 'GotoNextLineByPos', "]'"                              , 'mark#Goto("next", "line", "pos")'  )
-  call s:Map(a:mode, 'GotoPrevLineByPos', "['"                              , 'mark#Goto("prev", "line", "pos")'  )
-  call s:Map(a:mode, 'GotoNextSpotByPos', "]`"                              , 'mark#Goto("next", "spot", "pos")'  )
-  call s:Map(a:mode, 'GotoPrevSpotByPos', "[`"                              , 'mark#Goto("prev", "spot", "pos")'  )
-  call s:Map(a:mode, 'GotoNextMarker'   , "]-"                              , 'marker#Goto("next", "same")'       )
-  call s:Map(a:mode, 'GotoPrevMarker'   , "[-"                              , 'marker#Goto("prev", "same")'       )
-  call s:Map(a:mode, 'GotoNextMarkerAny', "]="                              , 'marker#Goto("next", "any")'        )
-  call s:Map(a:mode, 'GotoPrevMarkerAny', "[="                              , 'marker#Goto("prev", "any")'        )
-  call s:Map(a:mode, 'ListLocalMarks'   , 'm/'                              , 'mark#List("buf_curr")'             )
-  call s:Map(a:mode, 'ListLocalMarkers' , 'm?'                              , 'marker#List()'                     )
+  call s:Map(a:mode, 'Leader'           , s:SignatureMapLeader            , 'Input()'                             )
+  call s:Map(a:mode, 'PlaceNextMark'    , s:SignatureMapLeader . ","      , 'mark#Toggle("next")'                 )
+  call s:Map(a:mode, 'ToggleMarkAtLine' , s:SignatureMapLeader . "."      , 'mark#ToggleAtLine()'                 )
+  call s:Map(a:mode, 'PurgeMarksAtLine' , s:SignatureMapLeader . "-"      , 'mark#Purge("line")'                  )
+  call s:Map(a:mode, 'PurgeMarks'       , s:SignatureMapLeader . "<Space>", 'mark#Purge("all")'                   )
+  call s:Map(a:mode, 'PurgeMarkers'     , s:SignatureMapLeader . "<BS>"   , 'marker#Purge()'                      )
+  call s:Map(a:mode, 'DeleteMark'       , "dm"                            , 'Remove(v:count)'                     )
+  call s:Map(a:mode, 'GotoNextLineAlpha', "']"                            , 'mark#Goto("next", "line", "alpha")'  )
+  call s:Map(a:mode, 'GotoPrevLineAlpha', "'["                            , 'mark#Goto("prev", "line", "alpha")'  )
+  call s:Map(a:mode, 'GotoNextSpotAlpha', "`]"                            , 'mark#Goto("next", "spot", "alpha")'  )
+  call s:Map(a:mode, 'GotoPrevSpotAlpha', "`["                            , 'mark#Goto("prev", "spot", "alpha")'  )
+  call s:Map(a:mode, 'GotoNextLineByPos', "]'"                            , 'mark#Goto("next", "line", "pos")'    )
+  call s:Map(a:mode, 'GotoPrevLineByPos', "['"                            , 'mark#Goto("prev", "line", "pos")'    )
+  call s:Map(a:mode, 'GotoNextSpotByPos', "]`"                            , 'mark#Goto("next", "spot", "pos")'    )
+  call s:Map(a:mode, 'GotoPrevSpotByPos', "[`"                            , 'mark#Goto("prev", "spot", "pos")'    )
+  call s:Map(a:mode, 'GotoNextMarker'   , "]-"                            , 'marker#Goto("next", "same", v:count)')
+  call s:Map(a:mode, 'GotoPrevMarker'   , "[-"                            , 'marker#Goto("prev", "same", v:count)')
+  call s:Map(a:mode, 'GotoNextMarkerAny', "]="                            , 'marker#Goto("next", "any",  v:count)')
+  call s:Map(a:mode, 'GotoPrevMarkerAny', "[="                            , 'marker#Goto("prev", "any",  v:count)')
+  call s:Map(a:mode, 'ListLocalMarks'   , 'm/'                            , 'mark#List("buf_curr")'               )
+  call s:Map(a:mode, 'ListLocalMarkers' , 'm?'                            , 'marker#List()'                       )
 endfunction

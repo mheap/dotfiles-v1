@@ -9,11 +9,12 @@ function! signature#marker#Toggle(marker)                                       
   " Arguments: marker [!@#$%^&*()]
 
   let l:lnum = line('.')
-  " If marker is found in on current line, remove it, else place it
+  " If marker is found on current line, remove it, else place it
   if (  (get(b:sig_markers, l:lnum, "") =~# escape(a:marker, '$^'))
    \ && !g:SignatureForceMarkerPlacement
    \ )
     call signature#sign#Remove(a:marker, l:lnum)
+    call signature#sign#ToggleDummy()
   else
     call signature#sign#Place(a:marker, l:lnum)
   endif
@@ -51,50 +52,62 @@ function! signature#marker#Purge(...)                                           
       call signature#marker#Remove(l:lnum, l:marker)
     endfor
   endfor
+  call signature#sign#ToggleDummy()
 endfunction
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" Navigation                                                                                                       {{{1
 "
-function! signature#marker#Goto( dir, type )                                                                      " {{{2
+function! signature#marker#Goto( dir, marker_num, count )                                                         " {{{2
   " Description: Jump to next/prev marker by location.
-  " Arguments: dir  = next : Jump forward
-  "                   prev : Jump backward
-  "            type = same : Jump to a marker of the same type
-  "                   any  : Jump to a marker of any type
+  " Arguments: dir    = next  : Jump forward
+  "                     prev  : Jump backward
+  "            marker = same  : Jump to a marker of the same type
+  "                     any   : Jump to a marker of any type
+  "                     [1-9] : Jump to the corresponding marker
 
   let l:lnum = line('.')
 
+  let l:marker = ''
+  if (a:marker_num =~ '\v<[1-9]>')
+    let l:marker = split(b:SignatureIncludeMarkers, '\zs')[a:marker_num]
+  elseif (  (a:marker_num ==? 'same')
+       \ && has_key(b:sig_markers, l:lnum)
+       \ )
+    let l:marker = strpart(b:sig_markers[l:lnum], 0, 1)
+  endif
+
   " Get list of line numbers of lines with markers.
   " If current line has a marker, filter out line numbers of other markers ...
-  if (  has_key(b:sig_markers, l:lnum)
-   \ && (a:type ==? 'same')
-   \ )
+  if (l:marker != '')
     let l:marker_lnums = sort(keys(filter(copy(b:sig_markers),
-          \ 'strpart(v:val, 0, 1) == strpart(b:sig_markers[l:lnum], 0, 1)')), "signature#utils#NumericSort")
+          \ 'strpart(v:val, 0, 1) == l:marker')), "signature#utils#NumericSort")
   else
     let l:marker_lnums = sort(keys(b:sig_markers), "signature#utils#NumericSort")
   endif
 
   if (a:dir ==? 'next')
-    let l:targ = (b:SignatureWrapJumps ? min(l:marker_lnums) : l:lnum)
-    for i in l:marker_lnums
-      if i > l:lnum
-        let l:targ = i
-        break
-      endif
-    endfor
+    let l:marker_lnums = filter(copy(l:marker_lnums), ' v:val >  l:lnum')
+                     \ + filter(copy(l:marker_lnums), '(v:val <= l:lnum) && b:SignatureWrapJumps')
   elseif (a:dir ==? 'prev')
-    let l:targ = (b:SignatureWrapJumps ? max(l:marker_lnums) : l:lnum)
-    for i in l:marker_lnums
-      if i < l:lnum
-        let l:targ = i
-        break
-      endif
-    endfor
+    call reverse(l:marker_lnums)
+    let l:marker_lnums = filter(copy(l:marker_lnums), ' v:val <  l:lnum')
+                     \ + filter(copy(l:marker_lnums), '(v:val >= l:lnum) && b:SignatureWrapJumps')
   endif
 
+  if (len(l:marker_lnums) == 0)
+    return
+  endif
+
+  let l:count = (a:count == 0 ? 1 : a:count)
+  if (b:SignatureWrapJumps)
+    let l:count = l:count % len(l:marker_lnums)
+  elseif (l:count > len(l:marker_lnums))
+    let l:count = 0
+  endif
+
+  let l:targ = l:marker_lnums[l:count - 1]
   execute 'normal! ' . l:targ . 'G'
 endfunction
 

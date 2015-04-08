@@ -25,6 +25,7 @@ git_bundles = [
     "git://github.com/majutsushi/tagbar.git", # Tagbar for ctags
     "git://github.com/fholgado/minibufexpl.vim.git", # MiniBufExplorer
     "git://github.com/takac/vim-hardtime.git", # vim-hardtime (Disable jjjjj/kkkkk etc)
+    "git://github.com/godlygeek/tabular.git", # Line up colons and equals and things like that
 
     "git://github.com/garbas/vim-snipmate.git", # Snipmate!
     "git://github.com/tomtom/tlib_vim.git", # Needed for Snipmate
@@ -37,7 +38,8 @@ git_bundles = [
     ## Syntax files
     "git://github.com/tpope/vim-markdown.git", # Markdown syntax
     "git://github.com/pangloss/vim-javascript.git", # Better Javascript indentation
-    "git://github.com/vim-scripts/Better-CSS-Syntax-for-Vim.git" # Better CSS3 highlighting
+    "git://github.com/vim-scripts/Better-CSS-Syntax-for-Vim.git", # Better CSS3 highlighting
+    "git://github.com/chase/vim-ansible-yaml.git" # Ansible playbook highlighting
 ]
 
 require 'fileutils'

@@ -41,16 +41,6 @@ function! s:guess(lines) abort
       continue
     endif
 
-    if line =~# '^=\w'
-      let podcomment = 1
-    endif
-    if podcomment
-      if line =~# '^=\%(end\|cut\)\>'
-        let podcomment = 0
-      endif
-      continue
-    endif
-
     if triplequote
       if line =~# '^[^"]*"""[^"]*$'
         let triplequote = 0
@@ -127,6 +117,10 @@ function! s:apply_if_ready(options) abort
 endfunction
 
 function! s:detect() abort
+  if &modifiable == 0
+    return
+  endif
+
   let options = s:guess(getline(1, 1024))
   if s:apply_if_ready(options)
     return

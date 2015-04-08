@@ -81,13 +81,29 @@ function! go#cmd#Build(bang, ...)
     let &makeprg = default_makeprg
 endfunction
 
-function! go#cmd#Test(...)
-    let command = "go test ."
-    if len(a:000)
-        let command = "go test " . expand(a:1)
+function! go#cmd#Test(compile, ...)
+    let command = "go test "
+
+    " don't run the test, only compile it. Useful to capture and fix errors or
+    " to create a test binary.
+    if a:compile
+        let command .= "-c"
     endif
 
-    echon "vim-go: " | echohl Identifier | echon "testing ..." | echohl None
+    if len(a:000)
+        let command .= expand(a:1)
+    endif
+
+    if len(a:000) == 2
+        let command .= a:2
+    endif
+
+    if a:compile
+        echon "vim-go: " | echohl Identifier | echon "compiling tests ..." | echohl None
+    else
+        echon "vim-go: " | echohl Identifier | echon "testing ..." | echohl None
+    endif
+
     redraw
     let out = go#tool#ExecuteInDir(command)
     if v:shell_error
@@ -103,8 +119,44 @@ function! go#cmd#Test(...)
     else
         call setqflist([])
         cwindow
-        echon "vim-go: " | echohl Function | echon "[test] PASS" | echohl None
+
+        if a:compile
+            echon "vim-go: " | echohl Function | echon "[test] SUCCESS" | echohl None
+        else
+            echon "vim-go: " | echohl Function | echon "[test] PASS" | echohl None
+        endif
     endif
+endfunction
+
+function! go#cmd#TestFunc(...)
+    " search flags legend (used only)
+    " 'b' search backward instead of forward
+    " 'c' accept a match at the cursor position
+    " 'n' do Not move the cursor
+    " 'W' don't wrap around the end of the file
+    "
+    " for the full list
+    " :help search
+    let test = search("func Test", "bcnW")
+
+    if test == 0
+        echo "vim-go: [test] no test found immediate to cursor"
+        return
+    end
+
+    let line = getline(test)
+    let name = split(split(line, " ")[1], "(")[0]
+    let flag = "-run '" . name . "$'"
+
+    let a1 = ""
+    if len(a:000)
+        let a1 = a:1
+
+        " add extra space
+        let flag = " " . flag 
+    endif
+
+    call go#cmd#Test(0, a1, flag)
 endfunction
 
 function! go#cmd#Coverage(...)

@@ -221,7 +221,7 @@ let g:netrw_home = '/tmp'
 
 " Keep temporary files out of working directories. Trailing double-slash tells
 " vim to base the filename on the full path of the original to avoid conflicts.
-set directory=~/.vim/tmp/swap//
+:set directory=$HOME/.vimlocal/swapfiles//
 
 """""""""""""""""""""""""
 "" Remap various options
@@ -354,4 +354,4 @@ let g:pdv_cfg_Copyright = "2014 Mediasift Ltd."
 
 
 """"" vim-hardtime
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0

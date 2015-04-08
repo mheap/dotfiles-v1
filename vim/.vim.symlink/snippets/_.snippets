@@ -1,2 +1,82 @@
 snippet dd
 	var_dump(\$${1});die;
+
+snippet tc
+	$config = new Frink_Configuration(
+		'localhost:88',  //Used for nothing when reading from file
+		'datasift.${1}', //Used as part of the cache key
+		new Frink_Configuration_Loader_JsonFile(array(
+			"path" => __DIR__ . "/testing/conf.json", //Custom file path
+			"ttl"  => 60 * 60,                        //1 hour life
+		))
+	);
+	
+
+snippet cl
+	var myCustomLevels = {
+		levels: {
+			foo: 0,
+			baz: 1,
+			bee: 2,
+		}
+	};
+
+	var customLogger = new (winston.Logger)({levels: myCustomLevels.levels, transports: [ new (winston.transports.Console)({ level: 'foo'}) ]});
+	customLogger.foo("This is a message");
+	customLogger.bee("This is another message");
+
+snippet wp
+	/**
+	 * Run the task as cli script
+	 */
+	try {
+		$cfg = $config->getData();
+	
+		if (!isset($cfg['workerpool'])) {
+			$cfg['workerpool'] = array();
+		}
+	
+		if (!isset($cfg['workerpool']['keepalive'])) {
+			throw new Exception('workerpool.keepalive must be set in the config.
+	Example: "workerpool":{"keepalive":{"address":"tcp://localhost:5599"}}
+			');
+		}
+	
+		$task = new ${1}(array(
+			'keepalive' => $cfg['workerpool']['keepalive']
+		));
+	
+		$task->run();
+	
+	} catch (Exception $e) {
+		$msg = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+		echo $msg;
+		error_log($msg);
+		exit(1);
+	}
+	exit(0);
+
+snippet con
+	{
+		"port": ${1},
+		"keepalives": {
+			"host": "localhost",
+			"inbound_port": 5599,
+			"internal_port": 5592,
+			"stall_timeout": 60000,
+			"grace_period": 1000
+		},
+		"pidfile": "/var/run/php.d/go${2}.pid",
+		"path": "/home/michael/development/ms-service-${3}/src/application/jobs/",
+		"filesuffix": "Task.php",
+		"autotasks": {
+			"${4}": {
+				"cardinality": 1
+			}
+		}
+	}
+	
+
+snippet boot
+	require_once __DIR__.'/../../bootstrap.php';
+
