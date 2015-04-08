@@ -189,7 +189,7 @@ main = do
     layoutBar <- spawnPipe "xmobar ~/.xmonad/xmobar/bottom-left.xmobarrc"
     let lytPP = layoutPP { ppOutput = hPutStrLn layoutBar }
 
-    xmonad $ myConfig
+    xmonad $ ewmh myConfig
         {
         -- Allow top and bottom bars 
         manageHook = myManageHook
