@@ -15,12 +15,13 @@ fi
 #####################################
 ## Carry on
 #####################################
+fpath=(~/.zsh/completions ~/.zsh/completions/zsh-completions/src $fpath) 
 
 # Initialize autocomplete here, otherwise functions won't be loaded
 autoload -Uz compinit && compinit
 setopt completeinword
 # Case insensitive
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+#zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # Better killall completion
 zstyle ':completion:*:killall:*' command 'ps -u $USER -o cmd'
@@ -65,3 +66,6 @@ export DISABLE_AUTO_TITLE=true
 slack(){
   cd ~/slack-4-linux/; ./slack &; disown; exit;
 }
+
+# Enable hub
+eval "$(hub alias -s)"
