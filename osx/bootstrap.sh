@@ -13,7 +13,7 @@ brew install wget
 
 # Add additional homebrew taps
 brew tap homebrew/dupes
-brew tap josegonzalez/homebrew-php
+brew tap homebrew/homebrew-php
 
 # And ack
 brew install ack
@@ -40,13 +40,10 @@ brew install ffmpeg
 # Install Z
 brew install Z
 
-# And install PHP 5.4
-brew install josegonzalez/php/php54
-export PATH="$(brew --prefix josegonzalez/php/php54)/bin:$PATH"
+# And install PHP 5.6
+brew install php56
+export PATH="$(brew --prefix homebrew/php/php56)/bin:$PATH"
 
-# Fix php.ini for 5.4
+# Fix php.ini for 5.6
 PHP_INI=`php -i 2>/dev/null| grep "Loaded Configuration File" | awk -F"=> " ' { print $2 } '`
 echo "date.timezone = UTC" >> $PHP_INI
-
-# Try and install composer
-brew install josegonzalez/php/composer
