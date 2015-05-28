@@ -191,6 +191,9 @@ set formatoptions+=1 " Break before 1-letter words
 set splitbelow
 set splitright
 
+" Share the system clipboard
+set clipboard=unnamedplus
+
 " Highlight column 80
 if exists('+colorcolumn')
   set colorcolumn=80
@@ -339,6 +342,11 @@ let g:syntastic_python_checkers=['flake8']
 """"" Twig and Swig are HTML
 au! BufNewFile,BufRead *.twig set filetype=html
 au! BufNewFile,BufRead *.swig set filetype=html
+
+augroup vagrant
+  au!
+  au BufRead,BufNewFile Vagrantfile set filetype=ruby
+augroup END
 
 """"" Tagbar
 nmap <F8> :TagbarToggle<CR>

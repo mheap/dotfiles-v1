@@ -13,6 +13,10 @@ if [[ -z "$HDMI_ON" ]] && [[ -z "$DP_ON" ]]; then
 elif [[ -z "$HDMI_ON" ]]; then
   bash ~/.screenlayout/home-desk.sh
 
+# Only the DP on
+elif [[ -z "$DP_ON" ]]; then
+  bash ~/.screenlayout/pikachu-desk.sh
+
 # Or, we're just on the laptop
 else
   bash ~/.screenlayout/laptop-only.sh
